@@ -8,7 +8,7 @@ pipeline {
                    steps {
                        echo 'Stage con ejecución normal, python'
                             sh 'python --version'
-                            sh 'pip install pytest==3.0.6'
+                            sh 'pip install --user pytest==3.0.6'
                             sh 'pytest tests/'
                             sh 'pip install coverage'
                             sh 'pytest --cov=app tests/'
