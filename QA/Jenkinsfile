@@ -11,7 +11,7 @@ pipeline {
                 sh 'echo $HOME'
                 sh 'echo "Current directory: $(pwd)"'
                 sh 'echo "Contents of $HOME/.cache/pip:"'
-                sh 'ls -la $HOME//.cache/pip'
+                sh 'ls -la $HOME/.cache/pip'
                 sh '. ./env/bin/activate && chmod -R u+w $HOME//.cache/pip && pip install pytest==6.2.5 && pytest tests/'
                 sh 'pip install coverage'
                 sh 'pytest --cov=app tests/'
