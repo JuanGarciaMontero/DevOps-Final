@@ -10,9 +10,9 @@ pipeline {
                             sh 'python --version'
                             sh 'python -m venv env'
                             sh '. ./env/bin/activate'
-                            sh 'pip install pytest'
-                            sh 'pip install coverage'
+                            sh 'pip install pytest==6.2.5'
                             sh 'pytest tests/'
+                            sh 'pip install coverage'
                             sh 'pytest --cov=app tests/'
                    }
         }
