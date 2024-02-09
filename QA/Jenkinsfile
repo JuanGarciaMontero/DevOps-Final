@@ -9,7 +9,9 @@ pipeline {
                    }
                    steps {
                        echo 'Stage con ejecución normal, python'
-                               LibreriaContenedor()
+                            sh 'python --version'
+                            sh 'pytest tests/'
+                            sh 'pytest --cov=app tests/'
                    }
         }
         }
