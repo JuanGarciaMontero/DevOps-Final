@@ -1,0 +1,19 @@
+# Jenkinsfile
+
+@Library('github.com/JuanGarciaMontero/DevOps-Final@QA') _
+
+pipeline {
+    agent any
+    stages {
+        stage ('Stage crea contenedor con Python') {
+                   agent {
+                       docker { image 'python:slim-bullseye' }
+                   }
+                   steps {
+                       echo 'Stage con ejecución normal, python'
+                               LibreriaContenedor()
+                   }
+        }
+        }
+post { always { echo "Fin del pipeline" } }              
+} 

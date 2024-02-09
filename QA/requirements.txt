@@ -2,6 +2,8 @@ flask
 sqlalchemy
 psycopg2-binary
 flask-sqlalchemy
-
+Flask-Testing psycopg2 pytest
+coverage
+flake8
 
 

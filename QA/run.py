@@ -1,11 +1,8 @@
 import os
-
 from app import create_app
-from app.config import config_dict
-
-import sys
 import click
 from flask.cli import FlaskGroup
+
 
 @click.command(cls=FlaskGroup, create_app=create_app)
 def cli():
