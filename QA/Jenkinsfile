@@ -8,7 +8,9 @@ pipeline {
                    steps {
                        echo 'Stage con ejecución normal, python'
                             sh 'python --version'
+                            sh 'pip install Flask-Testing psycopg2 pytest'
                             sh 'pytest tests/'
+                            sh 'pip install coverage'
                             sh 'pytest --cov=app tests/'
                    }
         }
