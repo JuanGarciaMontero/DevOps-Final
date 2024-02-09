@@ -9,7 +9,7 @@ pipeline {
                        echo 'Stage con ejecución normal, python'
                             sh 'python --version'
                             sh 'python -m venv env'
-                            sh './venv/bin/activate'
+                            sh 'source ./venv/bin/activate'
                             sh 'pip install -r requirements.txt'
                             sh 'pytest tests/'
                             sh 'pytest --cov=app tests/'
