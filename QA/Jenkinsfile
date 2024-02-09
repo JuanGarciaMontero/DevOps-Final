@@ -8,11 +8,10 @@ pipeline {
                    steps {
                        echo 'Stage con ejecución normal, python'
                             sh 'python --version'
-                            sh 'sudo apt-get install libpq-dev'
                             sh 'pip install psycopg2-binary'
                             sh 'pip install Flask-Testing psycopg2'
                             sh 'export PATH="/bin/pg_config:$PATH"'
-                            sh 'pip install Flask-Testing psycopg2 pytest'
+                            sh 'pip pytest'
                             sh 'pytest tests/'
                             sh 'pip install coverage'
                             sh 'pytest --cov=app tests/'
