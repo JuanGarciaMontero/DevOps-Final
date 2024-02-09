@@ -2,20 +2,23 @@ pipeline {
     agent any
     stages {
         stage ('Stage crea contenedor con Python') {
-                   agent {
-                       docker { image 'python:slim-bullseye' }
-                   }
-                   steps {
-                       echo 'Stage con ejecución normal, python'
-                            sh 'python --version'
-                            sh 'python -m venv env'
-                            sh '. ./env/bin/activate'
-                            sh 'pip install pytest==6.2.5'
-                            sh 'pytest tests/'
-                            sh 'pip install coverage'
-                            sh 'pytest --cov=app tests/'
-                   }
+            agent {
+                docker { image 'python:slim-bullseye' }
+            }
+            steps {
+                echo 'Stage con ejecución normal, python'
+                sh 'python --version'
+                sh 'python -m venv env'
+                sh '. ./env/bin/activate && pip install pytest==6.2.5'
+                sh 'pytest tests/'
+                sh 'pip install coverage'
+                sh 'pytest --cov=app tests/'
+            }
         }
-        }
-post { always { echo "Fin del pipeline" } }              
-} 
+    }
+    post { 
+        always { 
+            echo "Fin del pipeline" 
+        } 
+    }              
+}
