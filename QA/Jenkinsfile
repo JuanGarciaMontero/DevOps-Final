@@ -9,7 +9,7 @@ pipeline {
                 echo 'Stage con ejecución normal, python'
                 sh 'python --version'
                 sh 'python -m venv env'
-                sh '. ./env/bin/activate && chmod -R u+w ~/pip && pip install pytest==6.2.5 && pytest tests/'
+                sh '. ./env/bin/activate && chmod -R u+w ~/$HOME/.cache/pip && pip install pytest==6.2.5 && pytest tests/'
                 sh 'pip install coverage'
                 sh 'pytest --cov=app tests/'
             }
