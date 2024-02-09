@@ -1,5 +1,3 @@
-@Library('github.com/JuanGarciaMontero/DevOps-Final@QA') _
-
 pipeline {
     agent any
     stages {
