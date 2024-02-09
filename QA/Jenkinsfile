@@ -10,7 +10,6 @@ pipeline {
                             sh 'python --version'
                             sh 'python -m venv env'
                             sh '. ./env/bin/activate'
-                            sh 'ls -l /QA/'
                             sh 'chmod +r /QA/requirements.txt'
                             sh 'pip install -r /QA/requirements.txt'
                             sh 'pytest tests/'
