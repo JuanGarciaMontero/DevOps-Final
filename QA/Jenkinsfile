@@ -8,7 +8,7 @@ pipeline {
                    steps {
                        echo 'Stage con ejecución normal, python'
                             sh 'python --version'
-                            sh 'pip install -r requirements.txt'
+                            sh 'ls'
                             sh 'pytest tests/'
                             sh 'pytest --cov=app tests/'
                    }
