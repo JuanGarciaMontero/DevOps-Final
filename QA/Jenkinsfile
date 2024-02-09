@@ -8,7 +8,9 @@ pipeline {
                    steps {
                        echo 'Stage con ejecución normal, python'
                             sh 'python --version'
-                            sh 'pwd'
+                            sh 'python -m venv env'
+                            sh 'source env/bin/activate'
+                            sh 'pip install -r requirements.txt'
                             sh 'pytest tests/'
                             sh 'pytest --cov=app tests/'
                    }
