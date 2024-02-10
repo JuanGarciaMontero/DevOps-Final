@@ -2,15 +2,18 @@ pipeline {
     agent any
     stages {
         stage('Stage crea contenedor con Python') {
-            agent {
-                docker { image 'python:slim-bullseye' }
-            }
             steps {
-                echo 'Stage con ejecución normal, python'
-                sh 'python --version'
-                sh 'pip install coverage'
-                sh 'pytest --cov=app tests/'
-                
+                script {
+                    // Utiliza 'script' para ejecutar comandos en un bloque
+                    docker.image('juangarciamontero/app11:1.0.1').inside {
+                        // Utiliza 'inside' para ejecutar comandos dentro del contenedor
+                        git 'https://github.com/JuanGarciaMontero/DevOps-Final.git'
+                        echo 'Stage con ejecución normal, python'
+                        sh 'python --version'
+                        sh 'pytest tests/'
+                        sh 'pytest --cov=app tests/'
+                    }
+                }
             }
         }
     }
@@ -20,3 +23,4 @@ pipeline {
         }
     }
 }
+
