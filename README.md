@@ -25,25 +25,25 @@ En cuanto a la estructura del documento, este deberá estar compuesto de tres gr
      – ¿Usaremos algún SaaS de AWS para la gestión de las trazas y logs? Ver SaaS de AWS para observabilidad. 
 	 – ¿O desplegamos el nuestro propio? Ver AWS Trazas y logs; o usar Prometheus y Grafana	 
 	 
-# Bloques de desarrollo:
+## Bloques de desarrollo:
 
-1- Creación de un entorno local de desarrollo.
+# 1- Creación de un entorno local de desarrollo.
     Clonar a un repositorio git la aplicación ejemplo.
 	Realizar test unitarios a nuevas características incorporadas en nuestra aplicación
 	Documentación de: arquitectura de software, como se ejecutan los test, como se ejecutan localmente el entorno de prueas y el modelo de ramas GIT.
 	Test de cobertura de al menos el 80% de las líneas de código
-2- Creación de pipelen de CI. Jenkins.
+# 2- Creación de pipelen de CI. Jenkins.
     Clonado de código fuente
     Ejecución de test
 	Proceso de linting
 	Creación imagen Docker para ejecutar software en un contenedor
 	Subida el resultadoa algún Registro (privado,EC2, Docker Hub, ...) siempre que sea la rama des o main.
 	Documentar que hace Jenkins y Git, y en cada push se realice un job en Jenkins.
-3- Infraestructura como código
+# 3- Infraestructura como código
     El código generado debe estar en un repositorio de Git, que puede ser el mismo que el de la aplicación o no (está decisión debe ser justificada).
 	Se debe acompañar al código de IaC de instrucciones precisas sobre cómo conseguimos ejecutar la creación/actualización de la infraestructura, incluyendo si es necesario qué valores o variables de entorno debemos tener en cuenta.
 	Tampoco debemos olvidar que puede haber más de un entorno de despliegue y que nos podría interesar regenerar la misma infraestructura, con un diferente set de recursos, en otro VPC.
-4- Despliegue
+# 4- Despliegue
     El objetivo es el de generar un playbook de Ansible que sepa desplegar una nueva versión de una imagen Docker en la infraestructura que nosotros mismos hemos declarado y generado.
 	El único input que deberíamos necesitar es la versión por desplegar o una URL al artefacto/imagen.
 	Ten en cuenta aquellas estrategias de despliegue que permitan minimizar el tiempo de indisponibilidad, así como la posibilidad de que el proceso falle y haya que volver atrás.
