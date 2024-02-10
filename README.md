@@ -145,3 +145,43 @@ TOTAL                60     10    83%
 
 
 =================================================================== 1 passed in 2.61s =================================================================== 
+
+ Desde Jenkins se configura pipeline para ejecutar las pruebas unitarias, pruebas de covertura y linting; de forma
+ automática. Lo primero es realizar un dockerfile donde estará la app, tests y dependencias (requirements.txt), y lo
+ se publica en Docker Hub. Desde Jenkins y apuntando al repositorio en Github donde se encuantra el Jenkisfile se
+ ejecuta la CI de Jenkins y nos encontramos con error en los test debido a no tener la base de datos Postgresql.
+
+Para test(dockerfile)
+
+docker build -t juangarciamontero/app13:1.0.1 .
+docker images
+docker tag juangarciamontero/app13:1.0.1 juangarciamontero/app13:1.0.1
+docker push juangarciamontero/app13:1.0.1
+
+Al ejecutar Jenkinsfile desde Jenkins apuntando a un repo e Github, produce error al pasar
+los test unitario y no continua, ya que no encuentra la base de datos Postgresql.
+
+Ejecutando Python --version:
+Print Message
+0,75 Seg
+0
+Ejecutando Python --version:
+python --version
+Shell Script
+6 Seg
+0
++ python --version
+1
+Python 3.8.18
+pytest
+Shell Script
+1 Min 25 Seg
+4
+collected 53 items / 14 errors
+5
+6
+==================================== ERRORS ====================================
+7
+_ ERROR collecting QA/env/Lib/site-packages/greenlet/tests/test_contextvars.py _
+8
+ImportError while importing test module '/var/lib/jenkins/workspace/CI_DevOps-Final/QA/env/Lib/site-packages/greenlet/tests/test_contextvars.py'.
