@@ -8,9 +8,6 @@ pipeline {
                     // Dentro del contenedor Docker
                     docker.image('juangarciamontero/app11:1.0.1').inside { 
 
-                        // Instala las dependencias del proyecto
-                        sh 'pip install -r requirements.txt'
-
                         // Imprime información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
