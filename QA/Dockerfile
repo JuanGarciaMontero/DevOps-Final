@@ -8,10 +8,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-WORKDIR /test
-
-COPY . .
-
 EXPOSE 5000
 
 CMD ["python", "run.py"]
