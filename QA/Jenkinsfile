@@ -6,17 +6,17 @@ pipeline {
                 script {
                     // Utiliza 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    docker.image('juangarciamontero/app11:1.0.1').inside { 
+                    docker.image('juangarciamontero/app13:1.0.1').inside { 
 
                         // Imprime información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
                         // Ejecuta las pruebas unitarias
-                        sh 'pytest tests/'
+                        sh 'pytest'
 
                         // Ejecuta pruebas con cobertura
-                        sh 'pytest --cov=app tests/'
+                        sh 'pytest --cov=app'
 
                         // Ejecuta pruebas lintenigh
                         sh 'flake8'
