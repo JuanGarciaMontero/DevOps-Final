@@ -17,6 +17,9 @@ pipeline {
 
                         // Ejecuta pruebas con cobertura
                         sh 'pytest --cov=app tests/'
+
+                        // Ejecuta pruebas lintenigh
+                        sh 'flake8'
                     }
                 }
             }
