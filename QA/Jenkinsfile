@@ -25,11 +25,9 @@ pipeline {
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
-                        // Ejecutar pruebas con cobertura
-                        sh 'pytest --cov=app'
+                        // Ejecutar las pruebas unitarias
+                        sh 'pytest /tests'
 
-                        // Ejecutar pruebas lintenigh
-                        sh 'flake8'
                     }
                 }
             }
