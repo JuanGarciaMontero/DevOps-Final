@@ -26,10 +26,10 @@ pipeline {
                         sh 'python --version'
 
                         // Ejecutar las pruebas unitarias
-                        sh 'pytest tests/'
+                        sh 'pytest'
 
                         // Ejecutar pruebas con cobertura
-                        sh 'pytest --cov=app tests/'
+                        sh 'pytest --cov=app'
 
                     }
                 }
