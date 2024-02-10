@@ -3,8 +3,9 @@ sqlalchemy
 psycopg2-binary
 flask-sqlalchemy
 flask-Testing==0.8.1
-pytest
+pytest==8.0.0
 coverage
 flake8
+greenlet
 
 
