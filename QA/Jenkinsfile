@@ -10,28 +10,29 @@ pipeline {
             steps {
                 script {
                     // Iniciar contenedor de PostgreSQL
-                    docker.image('postgres:latest').withRun('-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}')
+                    docker.image('postgres:latest')
+                        .withRun('-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}')
                 }
             }
         }
         stage('Stage crea contenedor con Python') {
             steps {
                 script {
-                    // Utiliza 'script' para ejecutar comandos en un bloque
+                    // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
                     docker.image('juangarciamontero/app13:1.0.1').inside { 
 
-                        // Imprime información sobre la versión de Python
+                        // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
-                        // Ejecuta las pruebas unitarias
+                        // Ejecutar las pruebas unitarias
                         sh 'pytest'
 
-                        // Ejecuta pruebas con cobertura
+                        // Ejecutar pruebas con cobertura
                         sh 'pytest --cov=app'
 
-                        // Ejecuta pruebas lintenigh
+                        // Ejecutar pruebas lintenigh
                         sh 'flake8'
                     }
                 }
