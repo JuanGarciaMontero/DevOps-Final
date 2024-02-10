@@ -1,6 +1,19 @@
 pipeline {
     agent any
+    environment {
+        POSTGRES_DB = 'ejer_final'
+        POSTGRES_USER = 'juan'
+        POSTGRES_PASSWORD = 'juan'
+    }
     stages {
+        stage('Preparación del entorno') {
+            steps {
+                script {
+                    // Iniciar contenedor de PostgreSQL
+                    docker.image('postgres:latest').withRun('-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}')
+                }
+            }
+        }
         stage('Stage crea contenedor con Python') {
             steps {
                 script {
@@ -27,6 +40,11 @@ pipeline {
     }
     post {
         always {
+            // Detener y eliminar el contenedor de PostgreSQL después de la ejecución del pipeline
+            script {
+                docker.image('postgres:latest').stop()
+                docker.image('postgres:latest').remove(force: true)
+            }
             echo "Fin del pipeline"
         }
     }
