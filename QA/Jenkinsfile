@@ -25,9 +25,6 @@ pipeline {
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
-                        // Ejecutar las pruebas unitarias
-                        sh 'pytest'
-
                         // Ejecutar pruebas con cobertura
                         sh 'pytest --cov=app'
 
