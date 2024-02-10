@@ -7,10 +7,6 @@ pipeline {
                     // Utiliza 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
                     docker.image('juangarciamontero/app11:1.0.1').inside { 
-                        // Utiliza 'inside' para ejecutar comandos dentro del contenedor
-
-                        // Clona el repositorio desde GitHub
-                        git url: 'https://github.com/JuanGarciaMontero/DevOps-Final.git'
 
                         // Instala las dependencias del proyecto
                         sh 'pip install -r requirements.txt'
