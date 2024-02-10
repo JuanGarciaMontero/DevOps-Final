@@ -24,6 +24,8 @@ pipeline {
                         // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
+                        sh 'pip install greenlet'
+                        sh 'pip install --upgrade pytest'
 
                         // Ejecutar las pruebas unitarias
                         sh 'pytest'
