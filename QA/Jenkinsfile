@@ -25,6 +25,8 @@ pipeline {
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
+                        sh 'cd tests'
+
                         // Ejecutar las pruebas unitarias
                         sh 'pytest'
 
