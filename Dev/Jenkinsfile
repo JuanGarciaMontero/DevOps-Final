@@ -16,6 +16,11 @@ pipeline {
                         "-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
                     )
 
+                    // Esperar a que PostgreSQL esté listo
+                    sh 'dockerize -wait tcp://localhost:5432 -timeout 1m'
+
+                    // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
+                    env.POSTGRES_CONTAINER_ID = postgresContainer.id
                 }
             }
         }
@@ -25,7 +30,13 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').inside {
+                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').run()
+
+                    // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
+                    sh 'sleep 10'
+
+                    // Ejecutar comandos dentro del contenedor de la aplicación
+                    appContainer.inside {
                         // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
@@ -39,11 +50,14 @@ pipeline {
                         sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Luis"}\' http://localhost:5000/data'
 
                         // Mostrar datos después de la inserción
-                        sh 'curl http://127.0.0.1:5000/data'
+                        sh 'curl http://localhost:5000/data'
 
                         // Borrar por id
                         sh 'curl -X DELETE http://localhost:5000/data/3'
                     }
+
+                    // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
+                    env.APP_CONTAINER_ID = appContainer.id
                 }
             }
         }
@@ -51,10 +65,13 @@ pipeline {
 
     post {
         always {
-            // Detener y eliminar el contenedor de PostgreSQL después de la ejecución del pipeline
+            // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
-                postgresContainer.stop()
-                postgresContainer.remove(force: true)
+                docker.container(env.APP_CONTAINER_ID).stop()
+                docker.container(env.APP_CONTAINER_ID).remove(force: true)
+
+                docker.container(env.POSTGRES_CONTAINER_ID).stop()
+                docker.container(env.POSTGRES_CONTAINER_ID).remove(force: true)
             }
             echo "Fin del pipeline"
         }
