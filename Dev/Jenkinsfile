@@ -1,33 +1,32 @@
 pipeline {
     agent any
+
     environment {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'juan'
         POSTGRES_PASSWORD = 'juan'
     }
+
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
-                    // Crear red de Docker
-                    def network = docker.network('mi-red')
-
-                    // Iniciar contenedor de PostgreSQL conectado a la red
+                    // Crear y ejecutar el contenedor de PostgreSQL
                     def postgresContainer = docker.image('postgres:latest').run(
-                        "--network=mi-red -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+                        "-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
                     )
+
                 }
             }
         }
+
         stage('Iniciar contenedor con Python y app') {
             steps {
                 script {
-                    // Esperar a que PostgreSQL esté listo
-                    sh 'dockerize -wait tcp://localhost:5432 -timeout 1m'
-
-                    // Iniciar contenedor de la aplicación conectado a la misma red
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').run("--network=mi-red")
-
+                    // Utilizar 'script' para ejecutar comandos en un bloque
+                    // Dentro del contenedor Docker
+                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').inside {
+                        // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
@@ -44,18 +43,18 @@ pipeline {
 
                         // Borrar por id
                         sh 'curl -X DELETE http://localhost:5000/data/3'
+                    }
                 }
             }
         }
     }
+
     post {
         always {
-            // Detener y eliminar los contenedores después de la ejecución del pipeline
+            // Detener y eliminar el contenedor de PostgreSQL después de la ejecución del pipeline
             script {
                 postgresContainer.stop()
                 postgresContainer.remove(force: true)
-                appContainer.stop()
-                appContainer.remove(force: true)
             }
             echo "Fin del pipeline"
         }
