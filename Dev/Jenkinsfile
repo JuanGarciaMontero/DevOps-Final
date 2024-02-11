@@ -14,7 +14,7 @@ pipeline {
                         "-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
 
                         // Esperar 10 segundos antes de intentar conectarse
-                        sh 'sleep(time: 10, unit: \'SECONDS\')'
+                        sleep(time: 10, unit: 'SECONDS')
 
                         // Accede al contenedor donde se ejecuta la aplicación.
                         sh 'docker exec -it nombre_del_contenedor /bin/bash'
