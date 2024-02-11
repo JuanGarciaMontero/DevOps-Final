@@ -19,9 +19,6 @@ pipeline {
                     // Esperar 10 segundos antes de intentar conectarse
                     sleep(time: 10, unit: 'SECONDS')
 
-
-                    // Ejecutar comandos dentro del contenedor
-                    sh 'psql -h localhost -U ejer_final -d juan'
                 }
             }
         }
