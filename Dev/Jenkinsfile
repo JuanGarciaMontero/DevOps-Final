@@ -31,7 +31,7 @@ pipeline {
                     def appContainerId = sh(script: "docker run -d juangarciamontero/app13:1.0.9", returnStdout: true).trim()
 
                     // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
-                    sh 'sleep 10'
+                    sh 'sleep 20'
 
                     // Verificar si el contenedor de la aplicación está en ejecución
                     def isAppContainerRunning = sh(script: "docker inspect -f '{{.State.Running}}' ${appContainerId}", returnStatus: true).toInteger()
