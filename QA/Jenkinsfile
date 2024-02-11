@@ -21,7 +21,7 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.9').inside {
+                    def appContainer = docker.image('juangarciamontero/app13:1.0.10').inside {
                         // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
