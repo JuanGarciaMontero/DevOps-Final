@@ -36,7 +36,7 @@ pipeline {
                     sh 'sleep 10'
 
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    appContainer.inside {
+                    
                         // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
@@ -54,7 +54,7 @@ pipeline {
 
                         // Borrar por id
                         sh 'curl -X DELETE http://localhost:5000/data/3'
-                    }
+                    
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
                     env.APP_CONTAINER_ID = appContainer.id
