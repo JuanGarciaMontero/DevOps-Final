@@ -34,7 +34,7 @@ pipeline {
                         sh 'python --version'
 
                         // Mostrar datos desde la aplicación
-                        sh 'curl http://127.0.0.1:5000/data'
+                        sh 'curl http://localhost:5000/data'
 
                         // Insertar en la base de datos
                         sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Juan"}\' http://localhost:5000/data'
