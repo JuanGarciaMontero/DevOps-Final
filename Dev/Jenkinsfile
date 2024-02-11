@@ -29,13 +29,16 @@ pipeline {
                         // Esperar 10 segundos antes de intentar conectarse
                         sleep(time: 10, unit: 'SECONDS')
 
+                        // Mostramos los datos
+                        sh 'curl http://127.0.0.1:5000/data'
+
                         // Insertamos en la base de datos
                         sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Juan"}\' http://localhost:5000/data'
                         sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Fernando"}\' http://localhost:5000/data'
                         sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Luis"}\' http://localhost:5000/data'
 
                         // Mostramos los datos
-                        sh 'curl http://localhost:5000/data'
+                        sh 'curl http://127.0.0.1:5000/data'
 
                         // Borramos por id
                         sh 'curl -X DELETE http://localhost:5000/data/3'
