@@ -1,12 +1,13 @@
 FROM python:3.8
 
-WORKDIR /tests
+WORKDIR /
 
-COPY requirements.txt .
+COPY app/ /app
+COPY test/ /test
+COPY requirements.txt /
+COPY run.py /
 
 RUN pip install -r requirements.txt
-
-COPY . .
 
 EXPOSE 5000
 

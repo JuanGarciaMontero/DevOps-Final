@@ -2,10 +2,10 @@ flask
 sqlalchemy
 psycopg2-binary
 flask-sqlalchemy
-flask-Testing==0.8.1
-pytest==8.0.0
-coverage==5.5
+flask-Testing
+pytest==7.4.2
+coverage
 flake8
-greenlet==1.1.1
+
 
 
