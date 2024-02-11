@@ -19,8 +19,6 @@ pipeline {
                     // Esperar 10 segundos antes de intentar conectarse
                     sleep(time: 10, unit: 'SECONDS')
 
-                    // Acceder al contenedor donde se ejecuta la aplicación
-                    sh 'docker exec -it nombre_del_contenedor /bin/bash'
 
                     // Ejecutar comandos dentro del contenedor
                     sh 'psql -h localhost -U ejer_final -d juan'
