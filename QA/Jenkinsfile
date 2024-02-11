@@ -27,10 +27,10 @@ pipeline {
                         sh 'ls -la'
 
                         // Ejecutar las pruebas unitarias
-                        sh 'pytest ./tests'
+                        sh 'pytest ./QA/tests'
 
                         // Ejecutar pruebas con cobertura
-                        sh 'pytest --cov=app ./tests'
+                        sh 'pytest --cov=app ./QA/tests'
 
                     }
                     // Capturar el código de salida de las pruebas
