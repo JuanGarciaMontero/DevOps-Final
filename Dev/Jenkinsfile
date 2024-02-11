@@ -12,15 +12,13 @@ pipeline {
             steps {
                 script {
                     // Crear y ejecutar el contenedor de PostgreSQL
-                    def postgresContainer = docker.image('postgres:latest').run(
-                        "-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
-                    )
+                    def postgresContainerId = sh(script: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} postgres:latest", returnStdout: true).trim()
 
-                    // Esperar a que PostgreSQL esté listo
-                    sleep(time: 10, unit: 'SECONDS')
+                    // Esperar a que PostgreSQL esté listo (ajusta según tus necesidades)
+                    sh 'sleep 10'
 
                     // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
-                    env.POSTGRES_CONTAINER_ID = postgresContainer.id
+                    env.POSTGRES_CONTAINER_ID = postgresContainerId
                 }
             }
         }
@@ -30,35 +28,18 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.9').run()
+                    def appContainer = sh(script: "docker run -d juangarciamontero/app13:1.0.9", returnStdout: true).trim()
 
                     // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
                     sh 'sleep 10'
 
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    appContainer.inside {
-                        // Imprimir información sobre la versión de Python
-                        echo 'Ejecutando Python --version:'
-                        sh 'python --version'
-
-                        // Descomenta las líneas siguientes cuando estés seguro de que la aplicación está lista
-                        // Mostrar datos desde la aplicación
-                        //sh 'curl http://localhost:5000/data'
-
-                        // Insertar en la base de datos
-                        //sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Juan"}\' http://localhost:5000/data'
-                        //sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Fernando"}\' http://localhost:5000/data'
-                        //sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Luis"}\' http://localhost:5000/data'
-
-                        // Mostrar datos después de la inserción
-                        //sh 'curl http://localhost:5000/data'
-
-                        // Borrar por id
-                        //sh 'curl -X DELETE http://localhost:5000/data/3'
-                    }
+                    sh "docker exec ${appContainer} python --version"
+                    sh "docker exec ${appContainer} curl http://localhost:5000/data"
+                    // Otros comandos según sea necesario
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
-                    env.APP_CONTAINER_ID = appContainer.id
+                    env.APP_CONTAINER_ID = appContainer
                 }
             }
         }
@@ -68,11 +49,11 @@ pipeline {
         always {
             // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
-                docker.container(env.APP_CONTAINER_ID).stop()
-                docker.container(env.APP_CONTAINER_ID).remove(force: true)
+                sh "docker stop ${env.APP_CONTAINER_ID}"
+                sh "docker rm ${env.APP_CONTAINER_ID}"
 
-                docker.container(env.POSTGRES_CONTAINER_ID).stop()
-                docker.container(env.POSTGRES_CONTAINER_ID).remove(force: true)
+                sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
+                sh "docker rm ${env.POSTGRES_CONTAINER_ID}"
             }
             echo "Fin del pipeline"
         }
