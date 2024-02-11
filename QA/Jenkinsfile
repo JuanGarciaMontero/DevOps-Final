@@ -27,7 +27,7 @@ pipeline {
                         sh 'python --version'
 
                         // Esperar 10 segundos antes de intentar conectarse
-                        sleep(time: 20, unit: 'SECONDS')
+                        sleep(time: 10, unit: 'SECONDS')
 
                         // Ejecutar las pruebas unitarias
                         sh 'pytest ./QA/tests'
