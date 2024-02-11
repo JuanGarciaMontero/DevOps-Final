@@ -30,7 +30,7 @@ pipeline {
                     sh 'dockerize -wait tcp://localhost:5432 -timeout 1m'
 
                     // Iniciar contenedor de la aplicación conectado a la misma red
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').run("--network=${NETWORK_NAME}")
+                    def appContainer = docker.image('juangarciamontero/app13:1.0.9').run("--network=${NETWORK_NAME}")
 
                     // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
                     sh 'sleep 10'
