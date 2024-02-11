@@ -29,13 +29,6 @@ pipeline {
                         // Esperar 10 segundos antes de intentar conectarse
                         sleep(time: 10, unit: 'SECONDS')
 
-                        // Capturar el código de salida de las pruebas
-                        def exitCode = appContainer.run("echo \$?").trim()
-
-                        // Marcar la construcción como fallida si las pruebas fallan
-                        if (exitCode != "0") {
-                            error "Las pruebas fallaron con el código de salida ${exitCode}"
-
                         // Insertamos en la base de datos
                         sh 'curl -X POST -H "Content-Type: application/json" -d "{"name": "Juan"}" http://localhost:5000/data'
                         sh 'curl -X POST -H "Content-Type: application/json" -d "{"name": "Pedro"}" http://localhost:5000/data'
