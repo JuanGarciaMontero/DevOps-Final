@@ -9,7 +9,10 @@ pipeline {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
-                    def postgresContainer = docker.image('postgres:latest').run("-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}")
+                    // Crear y ejecutar el contenedor de PostgreSQL
+                    def postgresContainer = docker.image('postgres:latest').run(
+                        "-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+                    )
                 }
             }
         }
@@ -18,23 +21,24 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').inside { 
-
+                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').inside {
                         // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
-                        sh 'pwd'
-                        sh 'ls -la'
+
+                        // Esperar 10 segundos antes de intentar conectarse
+                        sleep(time: 20, unit: 'SECONDS')
 
                         // Ejecutar las pruebas unitarias
                         sh 'pytest ./QA/tests'
 
                         // Ejecutar pruebas con cobertura
                         sh 'pytest --cov=app ./QA/tests'
-
                     }
+
                     // Capturar el código de salida de las pruebas
                     def exitCode = appContainer.run("echo \$?").trim()
+
                     // Marcar la construcción como fallida si las pruebas fallan
                     if (exitCode != "0") {
                         error "Las pruebas fallaron con el código de salida ${exitCode}"
@@ -54,4 +58,3 @@ pipeline {
         }
     }
 }
-
