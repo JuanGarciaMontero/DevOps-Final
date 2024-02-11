@@ -17,6 +17,9 @@ pipeline {
                     def postgresContainer = docker.image('postgres:latest').run(
                         "--network=${NETWORK_NAME} -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
                     )
+                    
+                    // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
+                    def postgresContainerId = postgresContainer.id
                 }
             }
         }
@@ -52,6 +55,9 @@ pipeline {
                         // Borrar por id
                         sh 'curl -X DELETE http://localhost:5000/data/3'
                     }
+                    
+                    // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
+                    def appContainerId = appContainer.id
                 }
             }
         }
@@ -60,13 +66,11 @@ pipeline {
         always {
             // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
-                def postgresContainer = docker.container(postgresContainerId)
-                postgresContainer.stop()
-                postgresContainer.remove(force: true)
+                docker.container(postgresContainerId).stop()
+                docker.container(postgresContainerId).remove(force: true)
                 
-                def appContainer = docker.container(appContainerId)
-                appContainer.stop()
-                appContainer.remove(force: true)
+                docker.container(appContainerId).stop()
+                docker.container(appContainerId).remove(force: true)
             }
             echo "Fin del pipeline"
         }
