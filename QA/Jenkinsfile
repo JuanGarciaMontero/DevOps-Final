@@ -23,6 +23,8 @@ pipeline {
                         // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
+                        sh 'pwd'
+                        sh 'ls -la'
 
                         // Ejecutar las pruebas unitarias
                         sh 'pytest ./tests'
