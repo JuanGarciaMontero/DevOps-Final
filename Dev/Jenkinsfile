@@ -17,7 +17,7 @@ pipeline {
                     )
 
                     // Esperar a que PostgreSQL esté listo
-                    sh 'dockerize -wait tcp://localhost:5432 -timeout 1m'
+                    sleep(time: 10, unit: 'SECONDS')
 
                     // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
                     env.POSTGRES_CONTAINER_ID = postgresContainer.id
