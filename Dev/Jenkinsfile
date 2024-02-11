@@ -41,6 +41,7 @@ pipeline {
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
+                        // Descomenta las líneas siguientes cuando estés seguro de que la aplicación está lista
                         // Mostrar datos desde la aplicación
                         //sh 'curl http://localhost:5000/data'
 
@@ -54,7 +55,7 @@ pipeline {
 
                         // Borrar por id
                         //sh 'curl -X DELETE http://localhost:5000/data/3'
-                    
+                    }
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
                     env.APP_CONTAINER_ID = appContainer.id
