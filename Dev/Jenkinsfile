@@ -4,22 +4,18 @@ pipeline {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'juan'
         POSTGRES_PASSWORD = 'juan'
-        NETWORK_NAME = 'red'
     }
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
                     // Crear red de Docker
-                    docker.networkCreate(NETWORK_NAME)
+                    def network = docker.network('mi-red')
 
                     // Iniciar contenedor de PostgreSQL conectado a la red
                     def postgresContainer = docker.image('postgres:latest').run(
-                        "--network=${NETWORK_NAME} -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+                        "--network=mi-red -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
                     )
-
-                    // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
-                    env.POSTGRES_CONTAINER_ID = postgresContainer.id
                 }
             }
         }
@@ -30,18 +26,24 @@ pipeline {
                     sh 'dockerize -wait tcp://localhost:5432 -timeout 1m'
 
                     // Iniciar contenedor de la aplicación conectado a la misma red
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.9').run("--network=${NETWORK_NAME}")
+                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').run("--network=mi-red")
 
-                    // Esperar a que la aplicación esté lista
-                    waitForAppToBeReady(appContainer)
+                        echo 'Ejecutando Python --version:'
+                        sh 'python --version'
 
-                    // Ejecutar comandos dentro del contenedor de la aplicación
-                    appContainer.inside {
-                        // Resto del script
-                    }
+                        // Mostrar datos desde la aplicación
+                        sh 'curl http://localhost:5000/data'
 
-                    // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
-                    env.APP_CONTAINER_ID = appContainer.id
+                        // Insertar en la base de datos
+                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Juan"}\' http://localhost:5000/data'
+                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Fernando"}\' http://localhost:5000/data'
+                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Luis"}\' http://localhost:5000/data'
+
+                        // Mostrar datos después de la inserción
+                        sh 'curl http://127.0.0.1:5000/data'
+
+                        // Borrar por id
+                        sh 'curl -X DELETE http://localhost:5000/data/3'
                 }
             }
         }
@@ -50,18 +52,12 @@ pipeline {
         always {
             // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
-                docker.container(env.POSTGRES_CONTAINER_ID).stop()
-                docker.container(env.POSTGRES_CONTAINER_ID).remove(force: true)
-
-                docker.container(env.APP_CONTAINER_ID).stop()
-                docker.container(env.APP_CONTAINER_ID).remove(force: true)
+                postgresContainer.stop()
+                postgresContainer.remove(force: true)
+                appContainer.stop()
+                appContainer.remove(force: true)
             }
             echo "Fin del pipeline"
         }
     }
-}
-
-def waitForAppToBeReady(appContainer) {
-    // Implementa la lógica de espera activa para que la aplicación esté lista
-    // Puedes utilizar comandos como 'curl' para verificar la disponibilidad
 }
