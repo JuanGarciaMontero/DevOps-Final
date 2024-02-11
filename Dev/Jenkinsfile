@@ -4,7 +4,7 @@ pipeline {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'juan'
         POSTGRES_PASSWORD = 'juan'
-        NETWORK_NAME = 'mi-red'
+        NETWORK_NAME = 'red'
     }
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
