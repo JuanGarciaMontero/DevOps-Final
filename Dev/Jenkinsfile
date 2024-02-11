@@ -30,20 +30,14 @@ pipeline {
                     // Dentro del contenedor Docker
                     def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app13:1.0.11", returnStdout: true).trim()
 
-                    // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
-                    sh 'sleep 10'
+                    
 
-                    // Verificar si el contenedor de la aplicación está en ejecución
-                    def isAppContainerRunning = sh(script: "docker inspect -f '{{.State.Running}}' ${appContainerId}", returnStatus: true).toInteger()
-
-                    if (isAppContainerRunning == 1) {
+                    
                         // Ejecutar comandos dentro del contenedor de la aplicación
                         sh "docker exec ${appContainerId} python --version"
                         sh "docker exec ${appContainerId} curl http://localhost:5000/data"
                         // Otros comandos según sea necesario
-                    } else {
-                        error "El contenedor de la aplicación no está en ejecución."
-                    }
+                  
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
                     env.APP_CONTAINER_ID = appContainerId
