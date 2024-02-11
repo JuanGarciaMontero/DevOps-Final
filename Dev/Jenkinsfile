@@ -12,7 +12,17 @@ pipeline {
                     // Crear y ejecutar el contenedor de PostgreSQL
                     def postgresContainer = docker.image('postgres:latest').run(
                         "-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+
+                        // Esperar 10 segundos antes de intentar conectarse
+                        sh 'sleep(time: 10, unit: \'SECONDS\')'
+
+                        // Accede al contenedor donde se ejecuta la aplicación.
+                        sh 'docker exec -it nombre_del_contenedor /bin/bash'
+
+                        // Accede al contenedor donde se ejecuta la aplicación.
+                        sh 'psql -h localhost -U ejer_final -d juan'
                     )
+                    
                 }
             }
         }
@@ -26,8 +36,6 @@ pipeline {
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
-                        // Esperar 10 segundos antes de intentar conectarse
-                        sleep(time: 10, unit: 'SECONDS')
 
                         // Mostramos los datos
                         sh 'curl http://127.0.0.1:5000/data'
