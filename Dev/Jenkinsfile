@@ -37,9 +37,9 @@ pipeline {
                             error "Las pruebas fallaron con el código de salida ${exitCode}"
 
                         // Insertamos en la base de datos
-                        sh 'curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://localhost:5000/data'
-                        sh 'curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://localhost:5000/data'
-                        sh 'curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://localhost:5000/data'
+                        sh 'curl -X POST -H "Content-Type: application/json" -d "{"name": "Juan"}" http://localhost:5000/data'
+                        sh 'curl -X POST -H "Content-Type: application/json" -d "{"name": "Pedro"}" http://localhost:5000/data'
+                        sh 'curl -X POST -H "Content-Type: application/json" -d "{"name": "Luis Manuel"}" http://localhost:5000/data'
 
                         // Mostramos los datos
                         sh 'curl http://localhost:5000/data'
