@@ -36,24 +36,24 @@ pipeline {
                     sh 'sleep 10'
 
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    
+                    appContainer.inside {
                         // Imprimir información sobre la versión de Python
                         echo 'Ejecutando Python --version:'
                         sh 'python --version'
 
                         // Mostrar datos desde la aplicación
-                        sh 'curl http://localhost:5000/data'
+                        //sh 'curl http://localhost:5000/data'
 
                         // Insertar en la base de datos
-                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Juan"}\' http://localhost:5000/data'
-                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Fernando"}\' http://localhost:5000/data'
-                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Luis"}\' http://localhost:5000/data'
+                        //sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Juan"}\' http://localhost:5000/data'
+                        //sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Fernando"}\' http://localhost:5000/data'
+                        //sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Luis"}\' http://localhost:5000/data'
 
                         // Mostrar datos después de la inserción
-                        sh 'curl http://localhost:5000/data'
+                        //sh 'curl http://localhost:5000/data'
 
                         // Borrar por id
-                        sh 'curl -X DELETE http://localhost:5000/data/3'
+                        //sh 'curl -X DELETE http://localhost:5000/data/3'
                     
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
