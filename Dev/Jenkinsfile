@@ -4,17 +4,18 @@ pipeline {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'juan'
         POSTGRES_PASSWORD = 'juan'
+        NETWORK_NAME = 'mi-red'
     }
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
                     // Crear red de Docker
-                    def network = docker.network('mi-red')
+                    def network = docker.network(NETWORK_NAME)
 
                     // Iniciar contenedor de PostgreSQL conectado a la red
                     def postgresContainer = docker.image('postgres:latest').run(
-                        "--network=mi-red -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+                        "--network=${NETWORK_NAME} -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
                     )
                 }
             }
@@ -26,13 +27,31 @@ pipeline {
                     sh 'dockerize -wait tcp://localhost:5432 -timeout 1m'
 
                     // Iniciar contenedor de la aplicación conectado a la misma red
-                    def appContainer = docker.image('tu/imagen:tag').run("--network=mi-red")
+                    def appContainer = docker.image('juangarciamontero/app13:1.0.8').run("--network=${NETWORK_NAME}")
 
                     // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
                     sh 'sleep 10'
 
-                    // Ejecutar curl después de esperar
-                    sh 'curl http://localhost:5000/data'
+                    // Ejecutar comandos dentro del contenedor de la aplicación
+                    appContainer.inside {
+                        // Imprimir información sobre la versión de Python
+                        echo 'Ejecutando Python --version:'
+                        sh 'python --version'
+
+                        // Mostrar datos desde la aplicación
+                        sh 'curl http://localhost:5000/data'
+
+                        // Insertar en la base de datos
+                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Juan"}\' http://localhost:5000/data'
+                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Fernando"}\' http://localhost:5000/data'
+                        sh 'curl -X POST -H "Content-Type: application/json" -d \'{"name": "Luis"}\' http://localhost:5000/data'
+
+                        // Mostrar datos después de la inserción
+                        sh 'curl http://localhost:5000/data'
+
+                        // Borrar por id
+                        sh 'curl -X DELETE http://localhost:5000/data/3'
+                    }
                 }
             }
         }
@@ -41,8 +60,11 @@ pipeline {
         always {
             // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
+                def postgresContainer = docker.container(postgresContainerId)
                 postgresContainer.stop()
                 postgresContainer.remove(force: true)
+                
+                def appContainer = docker.container(appContainerId)
                 appContainer.stop()
                 appContainer.remove(force: true)
             }
