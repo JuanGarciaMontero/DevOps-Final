@@ -29,18 +29,29 @@ pipeline {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
                     def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app13:1.0.4", returnStdout: true).trim()
-
                     
+                    // Lista de comandos a ejecutar dentro del contenedor de la aplicación
+                    def commands = [
+                        "python --version",
+                        "curl http://localhost:5000"
+                        // Agrega más comandos si es necesario
+                    ]
+
+                    // Ejecuta cada comando en el contenedor de la aplicación usando 'invoke'
+                    commands.each { command ->
+                        invoke([command: "docker exec ${appContainerId} ${command}", pty: true])
+                        
+                        // Hacer una pausa opcional de 5 segundos entre comandos
+                        sh 'sleep 5'
+                    }
+
                     // Verificar si el contenedor de la aplicación está en ejecución
                     def isAppContainerRunning = sh(script: "docker inspect -f '{{.State.Running}}' ${appContainerId}", returnStatus: true).toInteger()
 
                     if (isAppContainerRunning == 1) {
-                        // Ejecutar comandos dentro del contenedor de la aplicación
-                        sh "docker exec ${appContainerId} python --version"
-                        sh "docker exec ${appContainerId} curl http://localhost:5000"
-                        // Otros comandos según sea necesario
+                        error "El contenedor de la aplicación SI está en ejecución."
                     } else {
-                        error "El contenedor de la aplicación no está en ejecución."
+                        error "El contenedor de la aplicación NO está en ejecución."
                     }
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
