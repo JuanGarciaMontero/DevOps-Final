@@ -31,7 +31,9 @@ pipeline {
 
                     // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
                     //sh 'sleep 10'
-
+                    sh "docker ps -a"
+                    sh "docker start ${appContainerId}"
+                    sh "docker logs ${appContainerId}"
                     // Ejecutar comandos dentro del contenedor de la aplicación
                     sh "docker exec ${appContainerId} python --version"
                     sh "docker exec ${appContainerId} python manage.py"
