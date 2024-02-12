@@ -26,9 +26,6 @@ pipeline {
         stage('Iniciar contenedor con Python y app') {
             steps {
                 script {
-                    // Construir la imagen de la aplicación Python
-                    sh "docker build -t juangarciamontero/app13:1.0.24 ."
-
                     // Crear y ejecutar el contenedor con la aplicación Python
                     def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app13:1.0.24", returnStdout: true).trim()
 
@@ -39,11 +36,15 @@ pipeline {
                     sh "docker logs ${appContainerId}"
 
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    sh "docker exec ${appContainerId} python --version"
-                    sh "docker exec ${appContainerId} python manage.py"
-                    sh "docker exec ${appContainerId} python run.py"
-                    sh "docker exec ${appContainerId} pytest ./QA/tests"
-                    sh "docker exec ${appContainerId} pytest --cov=app ./QA/tests"
+                    script {
+                        docker.image("${appContainerId}").inside {
+                            sh "python --version"
+                            sh "python manage.py"
+                            sh "python run.py"
+                            sh "pytest ./QA/tests"
+                            sh "pytest --cov=app ./QA/tests"
+                        }
+                    }
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
                     env.APP_CONTAINER_ID = appContainerId
