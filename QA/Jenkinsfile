@@ -35,7 +35,7 @@ pipeline {
                     sh "docker start ${appContainerId}"
                     sh "docker logs ${appContainerId}"
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    sh " python --version"
+                    sh "python --version"
                     
                     // Ejecutar las pruebas unitarias
                     sh "pytest ./QA/tests"
