@@ -39,7 +39,7 @@ pipeline {
                     if (isAppContainerRunning == 1) {
                         // Ejecutar comandos dentro del contenedor de la aplicación
                         sh "docker exec ${appContainerId} python --version"
-                        sh "docker exec ${appContainerId} curl http://localhost:5000/data"
+                        sh "docker exec ${appContainerId} curl http://localhost:5000"
                         // Otros comandos según sea necesario
                     } else {
                         error "El contenedor de la aplicación no está en ejecución."
