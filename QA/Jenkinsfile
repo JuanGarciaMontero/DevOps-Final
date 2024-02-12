@@ -7,9 +7,8 @@ pipeline {
         POSTGRES_PASSWORD = 'juan'
     }
     
-
     stages {
-
+        
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
@@ -21,14 +20,6 @@ pipeline {
 
                     // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
                     env.POSTGRES_CONTAINER_ID = postgresContainerId
-                }
-            }
-        }
-
-        stage('Construir imagen de la aplicación') {
-            steps {
-                script {
-                    sh "docker build -t juangarciamontero/app13:1.0.24 ."
                 }
             }
         }
