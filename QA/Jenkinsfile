@@ -1,64 +1,71 @@
 pipeline {
     agent any
+
     environment {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'juan'
         POSTGRES_PASSWORD = 'juan'
     }
+
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
                     // Crear y ejecutar el contenedor de PostgreSQL
-                    def postgresContainer = docker.image('postgres:latest').run(
-                        "-p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD}",
-                        "--name postgres-container"  // Agrega un nombre al contenedor
-                    )
+                    def postgresContainerId = sh(script: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --name postgres-container postgres:latest", returnStdout: true).trim()
+                    
+                    // Esperar a que PostgreSQL esté listo (ajusta según tus necesidades)
+                    sh 'sleep 10'
+
+                    // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
+                    env.POSTGRES_CONTAINER_ID = postgresContainerId
                 }
             }
         }
+
         stage('Iniciar contenedor con Python y app') {
             steps {
                 script {
-                    // Utilizar 'script' para ejecutar comandos en un bloque
-                    // Dentro del contenedor Docker
-                    def appContainer = docker.image('juangarciamontero/app13:1.0.15').run("-p 5000:5000 --name app-container")
-                    .inside {
-                        // Imprimir información sobre la versión de Python
-                        echo 'Ejecutando Python --version:'
-                        sh 'python --version'
-                        sh 'python manage.py'
-                        sh 'python run.py'
+                    // Crear y ejecutar el contenedor con la aplicación Python
+                    def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container juangarciamontero/app13:1.0.15", returnStdout: true).trim()
+                    
+                    // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
+                    sh 'sleep 10'
 
-                        // Esperar 10 segundos antes de intentar conectarse
-                        sleep(time: 10, unit: 'SECONDS')
+                    // Verificar si el contenedor de la aplicación está en ejecución
+                    def isAppContainerRunning = sh(script: "docker inspect -f '{{.State.Running}}' ${appContainerId}", returnStatus: true).toInteger()
 
+                    if (isAppContainerRunning == 1) {
+                        // Ejecutar comandos dentro del contenedor de la aplicación
+                        sh "docker exec ${appContainerId} python --version"
+                        sh "docker exec ${appContainerId} python manage.py"
+                        sh "docker exec ${appContainerId} python run.py"
+                        
                         // Ejecutar las pruebas unitarias
-                        sh 'pytest ./QA/tests'
+                        sh "docker exec ${appContainerId} pytest ./QA/tests"
 
                         // Ejecutar pruebas con cobertura
-                        sh 'pytest --cov=app ./QA/tests'
+                        sh "docker exec ${appContainerId} pytest --cov=app ./QA/tests"
+                    } else {
+                        error "El contenedor de la aplicación no está en ejecución."
                     }
 
-                    // Capturar el código de salida de las pruebas
-                    def exitCode = appContainer.run("echo \$?").trim()
-
-                    // Marcar la construcción como fallida si las pruebas fallan
-                    if (exitCode != "0") {
-                        error "Las pruebas fallaron con el código de salida ${exitCode}"
-                    }
+                    // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
+                    env.APP_CONTAINER_ID = appContainerId
                 }
             }
         }
     }
+
     post {
         always {
             // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
-                docker.image('postgres:latest').stop()
-                docker.image('postgres:latest').remove(force: true)
-                docker.image('juangarciamontero/app13:1.0.14').stop()
-                docker.image('juangarciamontero/app13:1.0.14').remove(force: true)
+                sh "docker stop ${env.APP_CONTAINER_ID}"
+                sh "docker rm ${env.APP_CONTAINER_ID}"
+
+                sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
+                sh "docker rm ${env.POSTGRES_CONTAINER_ID}"
             }
             echo "Fin del pipeline"
         }
