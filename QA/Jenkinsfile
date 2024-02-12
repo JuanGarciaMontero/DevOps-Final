@@ -36,7 +36,7 @@ pipeline {
                     sh "docker logs ${appContainerId}"
 
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    container("${appContainerId}") {
+                    docker.image("${appContainerId}").inside {
                         sh "python --version"
                         sh "python manage.py"
                         sh "python run.py"
