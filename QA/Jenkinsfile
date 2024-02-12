@@ -31,17 +31,19 @@ pipeline {
 
                     // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
                     //sh 'sleep 10'
+                    sh "docker exec ${appContainerId} python manage.py"
+                    sh "docker exec ${appContainerId} python run.py"
                     sh "docker ps -a"
                     sh "docker start ${appContainerId}"
                     sh "docker logs ${appContainerId}"
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    sh "python --version"
+                    sh "docker exec ${appContainerId} python --version"
                     
                     // Ejecutar las pruebas unitarias
-                    sh "pytest ./QA/tests"
+                    sh "docker exec ${appContainerId} pytest ./QA/tests"
 
                     // Ejecutar pruebas con cobertura
-                    sh "pytest --cov=app ./QA/tests"
+                    sh "docker exec ${appContainerId} pytest --cov=app ./QA/tests"
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
                     env.APP_CONTAINER_ID = appContainerId
