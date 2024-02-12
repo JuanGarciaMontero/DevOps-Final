@@ -13,7 +13,7 @@ pipeline {
                 script {
                     // Crear y ejecutar el contenedor de PostgreSQL
                     def postgresContainerId = sh(script: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --name postgres-container postgres:latest", returnStdout: true).trim()
-                    
+
                     // Esperar a que PostgreSQL esté listo (ajusta según tus necesidades)
                     sh 'sleep 10'
 
@@ -27,19 +27,21 @@ pipeline {
             steps {
                 script {
                     // Crear y ejecutar el contenedor con la aplicación Python
-                    def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container juangarciamontero/app13:1.0.15", returnStdout: true).trim()
+                    def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app13:1.0.15", returnStdout: true).trim()
+
+                    // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
+                    sh 'sleep 10'
+
+                    // Ejecutar comandos dentro del contenedor de la aplicación
+                    sh "docker exec ${appContainerId} python --version"
+                    sh "docker exec ${appContainerId} python manage.py"
+                    sh "docker exec ${appContainerId} python run.py"
                     
-                        // Ejecutar comandos dentro del contenedor de la aplicación
-                        sh "docker exec ${appContainerId} python --version"
-                        sh "docker exec ${appContainerId} python manage.py"
-                        sh "docker exec ${appContainerId} python run.py"
-                        
-                        // Ejecutar las pruebas unitarias
-                        sh "docker exec ${appContainerId} pytest ./QA/tests"
+                    // Ejecutar las pruebas unitarias
+                    sh "docker exec ${appContainerId} pytest ./QA/tests"
 
-                        // Ejecutar pruebas con cobertura
-                        sh "docker exec ${appContainerId} pytest --cov=app ./QA/tests"
-
+                    // Ejecutar pruebas con cobertura
+                    sh "docker exec ${appContainerId} pytest --cov=app ./QA/tests"
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
                     env.APP_CONTAINER_ID = appContainerId
