@@ -35,15 +35,13 @@ pipeline {
                     sh "docker start ${appContainerId}"
                     sh "docker logs ${appContainerId}"
                     // Ejecutar comandos dentro del contenedor de la aplicación
-                    sh "docker exec ${appContainerId} python --version"
-                    sh "docker exec ${appContainerId} python manage.py"
-                    sh "docker exec ${appContainerId} python run.py"
+                    sh " python --version"
                     
                     // Ejecutar las pruebas unitarias
-                    sh "docker exec ${appContainerId} pytest ./QA/tests"
+                    sh "pytest ./QA/tests"
 
                     // Ejecutar pruebas con cobertura
-                    sh "docker exec ${appContainerId} pytest --cov=app ./QA/tests"
+                    sh "pytest --cov=app ./QA/tests"
 
                     // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
                     env.APP_CONTAINER_ID = appContainerId
