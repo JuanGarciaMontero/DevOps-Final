@@ -31,7 +31,6 @@ pipeline {
 
                     // Esperar a que la aplicación esté lista (ajusta según tus necesidades)
                     //sh 'sleep 10'
-                    sh "docker exec ${appContainerId} curl http://localhost:5000"
                     sh "docker ps -a"
                     sh "docker start ${appContainerId}"
                     sh "docker logs ${appContainerId}"
