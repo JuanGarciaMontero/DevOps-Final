@@ -1,6 +1,6 @@
 FROM python:3.8
 
-WORKDIR /app
+WORKDIR /
 
 COPY . .
 
@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["python", "run.py"]
+CMD ["python", "manage.py", "run.py"]
