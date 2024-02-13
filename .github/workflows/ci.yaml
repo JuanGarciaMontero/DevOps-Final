@@ -39,10 +39,10 @@ jobs:
     - name: Run app
       run: |
         python --version
-        sh manage.sh & gunicorn -w 4 -b 0.0.0.0:5000 run:app -D &
+        sh manage.sh & gunicorn -w 4 -b 127.0.0.1:5000 run:app -D &
         sleep 5  # Esperar a que el servidor se inicie completamente antes de realizar las solicitudes
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://127.0.0.1:5000/data
         curl http://127.0.0.1:5000/data
-        # curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://127.0.0.1:5000/data
         # curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://127.0.0.1:5000/data
         # curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://127.0.0.1:5000/data
         # curl http://127.0.0.1:5000/data
