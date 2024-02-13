@@ -33,11 +33,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt  # Ajusta según tus necesidades
 
-    - name: Run tests
+    - name: Run app
       run: |
-        python --version
         sh manage.sh
         python run.py
+        python --version
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://localhost:5000/data
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://localhost:5000/data
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://localhost:5000/data
