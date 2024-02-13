@@ -13,8 +13,8 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: 'ejer_final'
-          POSTGRES_USER: 'docker'
-          POSTGRES_PASSWORD: ''  # Asegúrate de que esta contraseña sea correcta
+          POSTGRES_USER: 'juan'
+          POSTGRES_PASSWORD: 'juan'  # Asegúrate de que esta contraseña sea correcta
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
