@@ -7,4 +7,3 @@ export DATABASE_URI=postgresql://postgres:postgres@0.0.0.0:5432/ejer_final
 export SECRET_KEY=secret
 
 python manage.py
-python run.py
