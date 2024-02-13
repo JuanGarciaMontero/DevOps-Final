@@ -2,8 +2,8 @@ name: Python CI
 
 on:
   push:
-    branches: [Dev]
-
+    branches:
+      - Dev
 
 jobs:
   build:
@@ -39,5 +39,5 @@ jobs:
         python --version
         sh manage.sh
         python run.py
-        python pytest ./QA/tests
-        python pytest --cov=app ./QA/tests
+        pytest ./QA/tests
+        pytest --cov=app ./QA/tests
