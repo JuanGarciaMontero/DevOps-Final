@@ -3,7 +3,7 @@ name: Python CI Dev
 on:
   push:
     branches:
-      - 'Dev/Dev/*'
+      - 'Dev'
 
 jobs:
   build:
