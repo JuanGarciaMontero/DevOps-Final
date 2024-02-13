@@ -28,18 +28,20 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app15:1.0.1", returnStdout: true).trim()
-
+                    def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app15:1.0.2", returnStdout: true).trim()
+                    
                     // Lista de comandos a ejecutar dentro del contenedor de la aplicación
                     def commands = [
-                        "python --version",
-                        "manage.sh",
-                        "python run.py",
-                        "sleep 5",
-                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data",
-                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data",
-                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Luis Manuel\"}' http://127.0.0.1:5000/data",
-                        "curl http://127.0.0.1:5000/data",
+                        "python --version"
+                        "manage.sh"
+                        "python run.py"
+                        "sleep 5"
+                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
+                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
+                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Luis Manuel\"}' http://127.0.0.1:5000/data"
+
+                        "curl http://127.0.0.1:5000/data"
+
                         "curl -X DELETE http://127.0.0.1:5000/data/1"
                         // Agrega más comandos si es necesario
                     ]
@@ -47,7 +49,7 @@ pipeline {
                     // Ejecuta cada comando en el contenedor de la aplicación usando 'invoke'
                     commands.each { command ->
                         invoke([command: "docker exec ${appContainerId} ${command}", pty: true])
-
+                        
                         // Hacer una pausa opcional de 5 segundos entre comandos
                         sh 'sleep 5'
                     }
