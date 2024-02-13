@@ -39,6 +39,7 @@ jobs:
     - name: Run app
       run: |
         python --version
+        manage.sh
         python run.py &
         sleep 5  # Esperar a que el servidor se inicie completamente antes de realizar las solicitudes
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://localhost:5000/data
