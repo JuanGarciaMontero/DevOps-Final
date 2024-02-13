@@ -2,8 +2,8 @@
 
 # Requires the database to be up
 
-FLASK_ENV=development
-DATABASE_URI=postgresql://postgres:postgres@0.0.0.0:5432/ejer_final
-SECRET_KEY=secret
+export FLASK_ENV=development
+export DATABASE_URI=postgresql://postgres:postgres@0.0.0.0:5432/ejer_final
+export SECRET_KEY=secret
 
 python manage.py
