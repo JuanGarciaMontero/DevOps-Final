@@ -1,0 +1,45 @@
+name: Python CI QA
+
+on:
+  push:
+    branches: [QA]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: 'ejer_final'
+          POSTGRES_USER: 'postgres'
+          POSTGRES_PASSWORD: 'postgres'
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Wait for PostgreSQL
+      run: sleep 20
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Ajusta según tus necesidades
+
+    - name: Run app
+      run: |
+        python --version
+        sh manage.sh & python run.py &
+        sleep 5  # Esperar a que el servidor se inicie completamente antes de realizar las solicitudes
+        pytest ./QA/tests
+        pytest --cov=app ./QA/tests
