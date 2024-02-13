@@ -2,9 +2,7 @@ name: Python CI
 
 on:
   push:
-    branches: [ Dev ] # Cambia "main" si tu rama principal tiene otro nombre
-  pull_request:
-    branches: [ Dev ]
+    branches: [Dev]
 
 jobs:
   build:
@@ -15,8 +13,8 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: 'ejer_final'
-          POSTGRES_USER: 'juan'
-          POSTGRES_PASSWORD: 'juan'
+          POSTGRES_USER: 'postgres'
+          POSTGRES_PASSWORD: 'postgres'
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -30,20 +28,22 @@ jobs:
       with:
         python-version: 3.8
 
+    - name: Wait for PostgreSQL
+      run: sleep 20
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt  # Ajusta según tus necesidades
 
-    - name: Run
+    - name: Run app
       run: |
         python --version
-        sh manage.sh
-        python run.py
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://localhost:5000/data
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://localhost:5000/data
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://localhost:5000/data
+        sh manage.sh & python run.py &
+        sleep 5  # Esperar a que el servidor se inicie completamente antes de realizar las solicitudes
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://127.0.0.1:5000/data
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://127.0.0.1:5000/data
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://127.0.0.1:5000/data
+        curl http://127.0.0.1:5000/data
+        curl -X DELETE http://127.0.0.1:5000/data/1
 
-        curl http://localhost:5000/data
-
-        curl -X DELETE http://localhost:5000/data/1
