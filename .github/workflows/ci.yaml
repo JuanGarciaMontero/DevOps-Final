@@ -41,5 +41,5 @@ jobs:
         python --version
         sh manage.sh & python run.py &
         sleep 5  # Esperar a que el servidor se inicie completamente antes de realizar las solicitudes
-        pytest ./QA/tests
-        pytest --cov=app ./QA/tests
+        pytest ./tests
+        pytest --cov=app ./tests
