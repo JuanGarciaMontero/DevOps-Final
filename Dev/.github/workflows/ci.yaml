@@ -2,8 +2,9 @@ name: Python CI
 
 on:
   push:
-    branches:
-      - Dev
+    branches: [ Dev ] # Cambia "main" si tu rama principal tiene otro nombre
+  pull_request:
+    branches: [ Dev ]
 
 jobs:
   build:
