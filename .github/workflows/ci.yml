@@ -38,7 +38,7 @@ jobs:
 
     - name: Run app
       run: |
-        sh manage.sh
+        python manage.py
         python run.py
         python --version
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://localhost:5000/data
