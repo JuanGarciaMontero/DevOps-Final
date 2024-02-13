@@ -40,7 +40,7 @@ jobs:
       run: |
         python --version
         chmod +x manage.sh
-        manage.sh
+        sh manage.sh
         python run.py
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://localhost:5000/data
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://localhost:5000/data
