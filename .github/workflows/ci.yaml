@@ -43,3 +43,15 @@ jobs:
         sleep 5  # Esperar a que el servidor se inicie completamente antes de realizar las solicitudes
         pytest ./tests
         pytest --cov=app ./tests
+        COVERAGE_THRESHOLD=80
+        ACTUAL_COVERAGE=$(grep -oP 'Statements.*?(\d+\.\d+)%' coverage-summary.json | awk '{print $NF}')
+        
+        echo "Actual Coverage: $ACTUAL_COVERAGE%"
+        
+        if (( $(echo "$ACTUAL_COVERAGE >= $COVERAGE_THRESHOLD" | bc -l) )); then
+          echo "Coverage is greater than $COVERAGE_THRESHOLD%. Creating pull request..."
+          # Puedes agregar aquí el comando para crear un pull request automáticamente.
+          # Por ejemplo, usando la API de GitHub o la herramienta de línea de comandos `hub`.
+        else
+          echo "Coverage is below $COVERAGE_THRESHOLD%. No pull request will be created."
+        fi
