@@ -2,7 +2,7 @@ name: Python CI
 
 on:
   push:
-    branches: [Dev/Dev]
+    branches: [Dev]
 
 jobs:
   build:
