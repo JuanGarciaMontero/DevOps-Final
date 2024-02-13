@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         POSTGRES_DB = 'ejer_final'
-        POSTGRES_USER = 'juan'
-        POSTGRES_PASSWORD = 'juan'
+        POSTGRES_USER = 'postgres'
+        POSTGRES_PASSWORD = 'postgres'
     }
     
     stages {
@@ -16,7 +16,7 @@ pipeline {
                     def postgresContainerId = sh(script: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --name postgres-container postgres:latest", returnStdout: true).trim()
 
                     // Esperar a que PostgreSQL esté listo (ajustar según tus necesidades)
-                    sh 'sleep 10'
+                    sh 'sleep 20'
 
                     // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
                     env.POSTGRES_CONTAINER_ID = postgresContainerId
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // Crear y ejecutar el contenedor con la aplicación Python
-                    def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app13:1.0.24", returnStdout: true).trim()
+                    def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app13:1.0.30", returnStdout: true).trim()
 
                     // Esperar a que la aplicación esté lista (ajustar según tus necesidades)
                     //sh 'sleep 10'
@@ -40,10 +40,11 @@ pipeline {
                     script {
                         docker.image("${appContainerId}").inside {
                             sh "python --version"
-                            sh "python manage.py"
+                            sh "manage.sh"
                             sh "python run.py"
-                            sh "pytest ./QA/tests"
-                            sh "pytest --cov=app ./QA/tests"
+                            sh "sleep 5"
+                            sh "pytest ./tests"
+                            sh "pytest --cov=app ./tests"
                         }
                     }
 
