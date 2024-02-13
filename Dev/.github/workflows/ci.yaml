@@ -2,7 +2,8 @@ name: Python CI Dev
 
 on:
   push:
-    branches: [Dev/Dev/]
+    branches:
+      - 'Dev/Dev/*'
 
 jobs:
   build:
@@ -46,4 +47,3 @@ jobs:
         curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://127.0.0.1:5000/data
         curl http://127.0.0.1:5000/data
         curl -X DELETE http://127.0.0.1:5000/data/1
-
