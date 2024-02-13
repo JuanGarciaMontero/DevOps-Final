@@ -41,8 +41,8 @@ jobs:
         python --version
         python run.py &
         sleep 5  # Esperar a que el servidor se inicie completamente antes de realizar las solicitudes
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://localhost:5000/data
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://localhost:5000/data
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://localhost:5000/data
-        curl http://localhost:5000/data
-        curl -X DELETE http://localhost:5000/data/1
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://0.0.0.0:5000/data
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://0.0.0.0:5000/data
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://0.0.0.0:5000/data
+        curl http://0.0.0.0:5000/data
+        curl -X DELETE http://0.0.0.0:5000/data/1
