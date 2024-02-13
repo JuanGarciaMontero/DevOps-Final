@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         POSTGRES_DB = 'ejer_final'
-        POSTGRES_USER = 'juan'
-        POSTGRES_PASSWORD = 'juan'
+        POSTGRES_USER = 'postgres'
+        POSTGRES_PASSWORD = 'postgres'
     }
 
     stages {
@@ -15,7 +15,7 @@ pipeline {
                     def postgresContainerId = sh(script: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} postgres:latest", returnStdout: true).trim()
 
                     // Esperar a que PostgreSQL esté listo (ajusta según tus necesidades)
-                    sh 'sleep 10'
+                    sh 'sleep 20'
 
                     // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde.
                     env.POSTGRES_CONTAINER_ID = postgresContainerId
@@ -28,18 +28,21 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app13:1.0.15", returnStdout: true).trim()
+                    def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app15:1.0.1", returnStdout: true).trim()
                     
                     // Lista de comandos a ejecutar dentro del contenedor de la aplicación
                     def commands = [
-                        "python --version",
-                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://localhost:5000/data"
-                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://localhost:5000/data"
-                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Luis Manuel\"}' http://localhost:5000/data"
+                        "python --version"
+                        "manage.sh"
+                        "python run.py"
+                        "sleep 5"
+                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
+                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
+                        "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Luis Manuel\"}' http://127.0.0.1:5000/data"
 
-                        "curl http://localhost:5000/data"
+                        "curl http://127.0.0.1:5000/data"
 
-                        "curl -X DELETE http://localhost:5000/data/1"
+                        "curl -X DELETE http://127.0.0.1:5000/data/1"
                         // Agrega más comandos si es necesario
                     ]
 
