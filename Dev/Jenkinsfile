@@ -17,7 +17,7 @@ pipeline {
                     // Esperar a que PostgreSQL esté listo (ajusta según tus necesidades)
                     sh 'sleep 10'
 
-                    // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
+                    // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde.
                     env.POSTGRES_CONTAINER_ID = postgresContainerId
                 }
             }
