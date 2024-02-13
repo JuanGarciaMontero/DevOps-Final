@@ -44,9 +44,9 @@ pipeline {
                         // Agrega más comandos si es necesario
                     ]
 
-                    // Ejecuta cada comando en el contenedor de la aplicación usando 'invoke'
-                    commands.each { command ->
-                        invoke([command: "docker exec ${appContainerId} ${command}", pty: true])
+                    // Ejecuta cada comando en el contenedor de la aplicación
+                    for (def command : commands) {
+                        sh "docker exec ${appContainerId} ${command}"
 
                         // Hacer una pausa opcional de 5 segundos entre comandos
                         sh 'sleep 5'
