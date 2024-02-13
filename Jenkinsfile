@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // Crear y ejecutar el contenedor con la aplicación Python
-                    def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app13:1.0.30", returnStdout: true).trim()
+                    def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app15:1.0.1", returnStdout: true).trim()
 
                     // Esperar a que la aplicación esté lista (ajustar según tus necesidades)
                     //sh 'sleep 10'
