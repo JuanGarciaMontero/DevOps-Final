@@ -47,7 +47,6 @@ pipeline {
                     sh 'sleep 20'
 
                     sh "docker logs ${appContainerId}"
-                    sh "docker events"
 
                     sh "docker exec ${appContainerId} which python"
                     sh "docker exec ${appContainerId} which manage.sh"
