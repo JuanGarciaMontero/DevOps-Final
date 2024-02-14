@@ -34,6 +34,8 @@ pipeline {
 
                     // Lista de comandos a ejecutar dentro del contenedor de la aplicación
                     def commands = [
+                        "which python"
+                        "which manage.sh"
                         "python --version",
                         "manage.sh",
                         "python run.py",
