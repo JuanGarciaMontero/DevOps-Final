@@ -34,10 +34,10 @@ pipeline {
 
                     // Lista de comandos a ejecutar dentro del contenedor de la aplicación
                     def commands = [
-                        "which python"
-                        "which manage.sh"
+                        "which python",
+                        "which manage.sh",
                         "python --version",
-                        "manage.sh",
+                        "sh manage.sh",
                         "python run.py",
                         "sleep 5",
                         "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data",
