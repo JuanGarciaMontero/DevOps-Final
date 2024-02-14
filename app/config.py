@@ -23,12 +23,12 @@ class ProductionConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@127.0.0.1:5432/ejer_final'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@0.0.0.0:5432/ejer_final'
     # O la configuración adecuada para tu base de datos de prueba
 
 class CoverageConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@127.0.0.1:5432/ejer_final'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@0.0.0.0:5432/ejer_final'
     COVERAGE = True
     COVERAGE_DIR = os.path.join(basedir, 'coverage')  
 

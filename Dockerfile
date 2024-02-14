@@ -1,11 +1,21 @@
+# Use an official Python runtime as a parent image
 FROM python:3.8
 
+# Set the working directory
 WORKDIR /
 
-COPY . .
+# Copy the current directory contents into the container
+COPY . /
 
-RUN pip install -r requirements.txt
+# Install virtualenv and create a virtual environment named 'venv'
+RUN pip install virtualenv && \
+    python -m venv venv
 
+# Activate the virtual environment and install dependencies
+RUN /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt"
+
+# Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-CMD ["python", "manage.sh", "run.py"]
+# Run app.py when the container launches
+CMD ["/bin/bash", "-c", "source venv/bin/activate && python manage.py runserver"]

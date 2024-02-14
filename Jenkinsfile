@@ -31,10 +31,7 @@ pipeline {
                     def appContainerId = sh(script: "docker run -d -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app15:1.0.1", returnStdout: true).trim()
 
                     // Esperar a que la aplicación esté lista (ajustar según tus necesidades)
-                    //sh 'sleep 10'
-                    sh "docker ps -a"
-                    sh "docker start ${appContainerId}"
-                    sh "docker logs ${appContainerId}"
+                    sh 'sleep 10'
 
                     // Ejecutar comandos dentro del contenedor de la aplicación
                     script {
@@ -60,10 +57,10 @@ pipeline {
             // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
                 sh "docker stop ${env.APP_CONTAINER_ID}"
-                sh "docker rm ${env.APP_CONTAINER_ID}"
+                sh "docker rmi ${env.APP_CONTAINER_ID}"
 
                 sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
-                sh "docker rm ${env.POSTGRES_CONTAINER_ID}"
+                sh "docker rmi ${env.POSTGRES_CONTAINER_ID}"
             }
             echo "Fin del pipeline"
         }
