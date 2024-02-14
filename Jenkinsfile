@@ -14,7 +14,7 @@ pipeline {
                     // Crear y ejecutar el contenedor de PostgreSQL
                     def postgresContainerId = sh(script: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} postgres:latest", returnStdout: true).trim()
 
-                    // Esperar a que PostgreSQL esté listo (ajustar según tus necesidades)
+                    // Esperar a que PostgreSQL esté listo
                     sh 'sleep 20'
 
                     // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde.
@@ -26,12 +26,19 @@ pipeline {
         stage('Iniciar contenedor con Python y app') {
             steps {
                 script {
-                    // Utilizar 'script' para ejecutar comandos en un bloque
-                    // Dentro del contenedor Docker
+                    // Crear y ejecutar el contenedor de la aplicación
                     def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app15:1.0.50", returnStdout: true).trim()
 
-                    // Lista de comandos a ejecutar dentro del contenedor de la aplicación
+                    // Esperar a que la aplicación esté lista
+                    sh 'sleep 20'
+
+                    // Imprimir los logs del contenedor de la aplicación
+                    sh "docker logs ${appContainerId}"
+
+                    // Ejecutar comandos dentro del contenedor de la aplicación
                     def commands = [
+                        "which python",
+                        "which manage.sh",
                         "python --version",
                         "sh manage.sh",
                         "python run.py",
@@ -44,7 +51,7 @@ pipeline {
                         // Agrega más comandos si es necesario
                     ]
 
-                    // Ejecuta cada comando en el contenedor de la aplicación usando 'invoke'
+                    // Ejecutar cada comando en el contenedor de la aplicación
                     commands.each { command ->
                         sh "docker exec ${appContainerId} ${command}"
 
