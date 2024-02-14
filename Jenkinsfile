@@ -11,9 +11,9 @@ pipeline {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
-                    sh "docker network postgres"
+                    sh "docker network COMMAND"
                     // Crear y ejecutar el contenedor de PostgreSQL
-                    def postgresContainerId = sh(script: "docker run -d --network postgres -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} postgres:latest", returnStdout: true).trim()
+                    def postgresContainerId = sh(script: "docker run -d --network COMMAND -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} postgres:latest", returnStdout: true).trim()
 
                     // Esperar a que PostgreSQL esté listo (ajustar según tus necesidades)
                     sh 'sleep 20'
@@ -29,7 +29,7 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainerId = sh(script: "docker run -d --network postgres -p 5000:5000 juangarciamontero/app15:1.0.50", returnStdout: true).trim()
+                    def appContainerId = sh(script: "docker run -d --network COMMAND -p 5000:5000 juangarciamontero/app15:1.0.50", returnStdout: true).trim()
 
                     sh 'sleep 20'
 
