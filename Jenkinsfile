@@ -30,16 +30,10 @@ pipeline {
                     // Dentro del contenedor Docker
                     def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app15:1.0.50", returnStdout: true).trim()
 
-                    sh 'sleep 20'
-
-                    sh "docker logs ${appContainerId}"
-
-                    sh "docker events"
+                    sh 'python --version'
 
                     // Lista de comandos a ejecutar dentro del contenedor de la aplicación
                     def commands = [
-                        "which python",
-                        "which manage.sh",
                         "python --version",
                         "sh manage.sh",
                         "python run.py",
