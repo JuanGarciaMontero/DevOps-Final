@@ -25,7 +25,6 @@ def cli():
         cov.html_report(directory=covdir)
         print('HTML version: file://{}/index.html'.format(covdir))
         cov.erase()
-        print(f'COVERAGE_PERCENTAGE={coverage_percentage}')
     else:
         if __name__ == "__main__":
             app.run(debug=True, host="0.0.0.0", port=5000)
