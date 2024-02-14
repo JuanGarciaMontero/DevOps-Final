@@ -13,7 +13,7 @@ pipeline {
                 script {
                     sh "docker network create my-network"
                     // Crear y ejecutar el contenedor de PostgreSQL
-                    def postgresContainerId = sh(script: "docker run -d -network my-network -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} postgres:latest", returnStdout: true).trim()
+                    def postgresContainerId = sh(script: "docker run -d --network my-network -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} postgres:latest", returnStdout: true).trim()
 
                     // Esperar a que PostgreSQL esté listo (ajustar según tus necesidades)
                     sh 'sleep 20'
@@ -29,7 +29,7 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainerId = sh(script: "docker run -d -network my-network -p 5000:5000 juangarciamontero/app15:1.0.50", returnStdout: true).trim()
+                    def appContainerId = sh(script: "docker run -d --network my-network -p 5000:5000 juangarciamontero/app15:1.0.50", returnStdout: true).trim()
 
                     sh 'sleep 20'
 
@@ -84,6 +84,9 @@ pipeline {
 
                 sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
                 sh "docker rmi ${env.POSTGRES_CONTAINER_ID}"
+
+                // Eliminar la red después de detener los contenedores
+                sh "docker network rm my-network"
             }
             echo "Fin del pipeline"
         }
