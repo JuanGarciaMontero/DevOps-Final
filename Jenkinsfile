@@ -20,7 +20,7 @@ pipeline {
                         -e POSTGRES_USER=${env.POSTGRES_USER} \
                         -e POSTGRES_PASSWORD=${env.POSTGRES_PASSWORD} \
                         --name ${env.POSTGRES_CONTAINER_NAME} \
-                        postgres:latest
+                        postgres:13
                     """
 
                     def postgresContainerId = sh(script: postgresCommand, returnStdout: true).trim()
