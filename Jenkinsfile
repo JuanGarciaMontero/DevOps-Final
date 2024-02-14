@@ -5,7 +5,6 @@ pipeline {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'postgres'
         POSTGRES_PASSWORD = 'postgres'
-        NETWORK_NAME = 'my-network'
         POSTGRES_CONTAINER_NAME = 'postgres-container'
         APP_CONTAINER_NAME = 'app-container'
     }
@@ -14,11 +13,8 @@ pipeline {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
-                    sh "docker network create ${env.NETWORK_NAME}"
-
                     def postgresCommand = """
                         docker run -d \
-                        --network ${env.NETWORK_NAME} \
                         -p 5432:5432 \
                         -e POSTGRES_DB=${env.POSTGRES_DB} \
                         -e POSTGRES_USER=${env.POSTGRES_USER} \
@@ -41,7 +37,6 @@ pipeline {
                 script {
                     def appCommand = """
                         docker run -d \
-                        --network ${env.NETWORK_NAME} \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
                         juangarciamontero/app15:1.0.50
@@ -86,8 +81,6 @@ pipeline {
 
                 sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
                 sh "docker rmi ${env.POSTGRES_CONTAINER_ID}"
-
-                sh "docker network rm ${env.NETWORK_NAME}"
             }
             echo "Fin del pipeline"
         }
