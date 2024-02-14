@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     def appCommand = """
-                        docker run -d \
+                        docker run -d -it \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
                         juangarciamontero/app15:1.0.50
@@ -44,12 +44,6 @@ pipeline {
 
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
 
-                    sh 'sleep 20'
-
-                    sh "docker logs ${appContainerId}"
-
-                    sh "docker exec ${appContainerId} which python"
-                    sh "docker exec ${appContainerId} which manage.sh"
                     sh "docker exec ${appContainerId} python --version"
                     sh "docker exec ${appContainerId} sh manage.sh"
                     sh "docker exec ${appContainerId} python run.py"
