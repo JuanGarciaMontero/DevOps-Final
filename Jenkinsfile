@@ -28,15 +28,13 @@ pipeline {
                 script {
                     // Utilizar 'script' para ejecutar comandos en un bloque
                     // Dentro del contenedor Docker
-                    def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app13:1.0.20", returnStdout: true).trim()
+                    def appContainerId = sh(script: "docker run -d -p 5000:5000 juangarciamontero/app15:1.0.50", returnStdout: true).trim()
 
                     sh 'sleep 20'
 
                     sh "docker logs ${appContainerId}"
 
                     sh "docker events"
-
-                    sh "source env/Scripts/activate"
 
                     // Lista de comandos a ejecutar dentro del contenedor de la aplicación
                     def commands = [
