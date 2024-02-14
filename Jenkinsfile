@@ -32,6 +32,10 @@ pipeline {
 
                     sh 'sleep 20'
 
+                    sh "docker logs ${appContainerId}"
+
+                    sh "docker events ${appContainerId}"
+
                     // Lista de comandos a ejecutar dentro del contenedor de la aplicación
                     def commands = [
                         "which python",
@@ -59,9 +63,7 @@ pipeline {
                     // Verificar si el contenedor de la aplicación está en ejecución
                     def isAppContainerRunning = sh(script: "docker inspect -f '{{.State.Running}}' ${appContainerId}", returnStatus: true).toInteger()
 
-                    if (isAppContainerRunning == 1) {
-                        error "El contenedor de la aplicación SÍ está en ejecución."
-                    } else {
+                    if (isAppContainerRunning == 0) {
                         error "El contenedor de la aplicación NO está en ejecución."
                     }
 
