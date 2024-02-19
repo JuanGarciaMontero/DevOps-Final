@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  KeyName:
+    Type: String
+    Default: qualentum_cfn-keypair
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Subnet where the instance will be deployed
+    Default: subnet-0eb6af1b004cd5ec2
+  InstanceType:
+    Type: String
+    Description: EC2 instance type
+    Default: t2.micro
+  ImageId:
+    Type: AWS::EC2::Image::Id
+    Description: ID of the AMI to use
+    Default: ami-061cf30a139d73d7a
+  MyIpAddress:
+    Type: String
+    Description: Current IP of the user
+
+Resources:
+  InstanceA:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref KeyName
+      SubnetId: !Ref SubnetId
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      SecurityGroupIds:
+        - !GetAtt ControlSecurityGroup.GroupId
+        - !GetAtt AccessSecurityGroup.GroupId
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+
+          git clone https://github.com/JuanGarciaMontero/DevOps-Final.git /opt/myapp
+
+          yum install -y python3 postgresql postgresql-devel
+
+          systemctl start postgresql
+          systemctl enable postgresql
+
+          su - postgres -c "psql -c \"CREATE USER postgres WITH PASSWORD 'postgres';\""
+          su - postgres -c "createdb -O postgres ejer_final"
+
+          systemctl restart postgresql
+
+          python3 -m pip install --upgrade pip
+          python3 -m pip install virtualenv
+
+          python3 -m virtualenv /opt/myapp-env 
+          source /opt/myapp-env/bin/activate
+
+          pip install -r /opt/myapp/requirements.txt
+
+          systemctl start gunicorn
+          systemctl enable gunicorn
+
+          sh /opt/myapp/manage.sh
+
+          sleep 10
+
+          cd /opt/myapp/
+          gunicorn -w 4 -b 0.0.0.0:5000 run:app -D
+
+
+  ControlSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group allowing SSH access from home
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Sub ${MyIpAddress}/32
+  
+  AccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group used for Load balancing purposes
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: 0.0.0.0/0 # demo
+  
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      Instances:
+        - !Ref InstanceA
+      SecurityGroups:
+        - !GetAtt AccessSecurityGroup.GroupId
+      Subnets:
+        - !Ref SubnetId
+      Listeners:
+        - LoadBalancerPort: 5000
+          InstancePort: 5000
+          Protocol: HTTP
+      HealthCheck:
+        Target: HTTP:5000/
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+
+Outputs:
+  LoadBalancerDns:
+    Value: !GetAtt LoadBalancer.DNSName
+    Export:
+      Name: !Sub "${AWS::StackName}-LB"
+  AccessSecurityGroup:
+    Value: !Ref AccessSecurityGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-AccessSG"
+  InstanceIpe:
+    Value: !GetAtt InstanceA.PublicIp
