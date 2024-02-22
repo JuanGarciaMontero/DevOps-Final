@@ -256,7 +256,7 @@ curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.
 
 	ansible-playbook -i inventory.yml playbook-dev.yml --ask-vault-pass -> contraseña=juan
 
-*Ejecutar Ansible en Linux en producción, prod.(aprovisionamiento para app y base de dato postpresql)
+* Ejecutar Ansible en Linux en producción, prod.(aprovisionamiento para app y base de dato postpresql)
 
 	Crea archivo secrets.yml -> ansible-vault encrypt secrets.yml
 
