@@ -247,8 +247,8 @@ curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.
 
 *********************************************************************************************************************************
 
-## DESPLIEGUE
-# APROVISIONAMIENTO Y CONFIGURACIÓN DE HOSTS. PRUEBAS EN LOCALHOST. WSL
+# DESPLIEGUE
+ APROVISIONAMIENTO Y CONFIGURACIÓN DE HOSTS. PRUEBAS EN LOCALHOST. WSL
 
 * Ejecutar Ansible en Linux en desarrollo, dev. (aprovisionamiento para app e imagen de postgresql)
 
