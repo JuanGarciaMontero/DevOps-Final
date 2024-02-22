@@ -5,7 +5,7 @@ En cuanto a la estructura del documento, este deberá estar compuesto de tres gr
 
 • Una descripción de la arquitectura del sistema.
     Nos interesa definir qué servicios, métodos y tecnologías se necesitan para poder ofrecer una solución productiva moderna y competente. 
-      • Balanceadores de carga. Docker
+    • Balanceadores de carga. Docker
 	  • Terminadores SSL. Clave pública y clave privada. Certificados 503, HTTPS
 	  • Bases de datos. Posgresql
 	  • Tecnologías de telemetría. Prometheus y Grafana
@@ -23,7 +23,7 @@ En cuanto a la estructura del documento, este deberá estar compuesto de tres gr
      Que se seguirá para garantizar que tu software llegue sin errores a producción y que sea capaz de dar servicio, de manera efectiva, a nuestros usuarios. Te comparto algunos ejemplos de esto: 
      – ¿Qué estrategia de despliegue usaremos en EC2 para poder dar servicio sin interrupciones? Estrategia de despliegue en EC2 como Canary.
      – ¿Usaremos algún SaaS de AWS para la gestión de las trazas y logs? Ver SaaS de AWS para observabilidad. 
-	 – ¿O desplegamos el nuestro propio? Ver AWS Trazas y logs; o usar Prometheus y Grafana	 
+	   – ¿O desplegamos el nuestro propio? Ver AWS Trazas y logs; o usar Prometheus y Grafana	 
 
 
 ## Bloques de desarrollo:
@@ -33,33 +33,33 @@ En cuanto a la estructura del documento, este deberá estar compuesto de tres gr
   ![imagen Piramide Tests](https://dc722jrlp2zu8.cloudfront.net/media/uploads/2022/11/18/untitled.png)
 
     Clonar a un repositorio git la aplicación ejemplo.
-	Realizar test unitarios a nuevas características incorporadas en nuestra aplicación
-	Documentación de: arquitectura de software, como se ejecutan los test, como se ejecutan localmente el entorno de pruebas y el modelo de ramas GIT.
-	Test de cobertura de al menos el 80% de las líneas de código
+	  Realizar test unitarios a nuevas características incorporadas en nuestra aplicación
+	  Documentación de: arquitectura de software, como se ejecutan los test, como se ejecutan localmente el entorno de pruebas y el modelo de ramas GIT.
+	  Test de cobertura de al menos el 80% de las líneas de código
 # 2- Creación de pipelen de CI. Jenkins.
 
-  ![imagen Jenkins](https://miro.medium.com/v2/resize:fit:951/1*H9jHoRaRnJ0KnqmPs6xeUA.jpeg)
+  ![imagen Jenkins|50](https://miro.medium.com/v2/resize:fit:951/1*H9jHoRaRnJ0KnqmPs6xeUA.jpeg )
 
     Clonado de código fuente
     Ejecución de test
-	Proceso de linting
-	Creación imagen Docker para ejecutar software en un contenedor
-	Subida el resultadoa algún Registro (privado,EC2, Docker Hub, ...) siempre que sea la rama des o main.
-	Documentar que hace Jenkins y Git, y en cada push se realice un job en Jenkins.
+	  Proceso de linting
+	  Creación imagen Docker para ejecutar software en un contenedor
+	  Subida el resultadoa algún Registro (privado,EC2, Docker Hub, ...) siempre que sea la rama des o main.
+	  Documentar que hace Jenkins y Git, y en cada push se realice un job en Jenkins.
 # 3- Infraestructura como código
 
   ![imagen AWS CludFormation](https://www.inbest.cloud/hs-fs/hubfs/Alondra/que%20es%20aws%20cloud%20formation.jpg)
 
     El código generado debe estar en un repositorio de Git, que puede ser el mismo que el de la aplicación o no (está decisión debe ser justificada).
-	Se debe acompañar al código de IaC de instrucciones precisas sobre cómo conseguimos ejecutar la creación/actualización de la infraestructura, incluyendo si es necesario qué valores o variables de entorno debemos tener en cuenta.
-	Tampoco debemos olvidar que puede haber más de un entorno de despliegue y que nos podría interesar regenerar la misma infraestructura, con un diferente set de recursos, en otro VPC.
+	  Se debe acompañar al código de IaC de instrucciones precisas sobre cómo conseguimos ejecutar la creación/actualización de la infraestructura, incluyendo si es necesario qué valores o variables de entorno debemos tener en cuenta.
+	  Tampoco debemos olvidar que puede haber más de un entorno de despliegue y que nos podría interesar regenerar la misma infraestructura, con un diferente set de recursos, en otro VPC.
 # 4- Despliegue
 
   ![imagen Ansible Architecture](https://www.exevi.com/wp-content/uploads/2021/04/ansible-automation-engine-768x450.png)
 
     El objetivo es el de generar un playbook de Ansible que sepa desplegar una nueva versión de una imagen Docker en la infraestructura que nosotros mismos hemos declarado y generado.
-	El único input que deberíamos necesitar es la versión por desplegar o una URL al artefacto/imagen.
-	Ten en cuenta aquellas estrategias de despliegue que permitan minimizar el tiempo de indisponibilidad, así como la posibilidad de que el proceso falle y haya que volver atrás.
+	  El único input que deberíamos necesitar es la versión por desplegar o una URL al artefacto/imagen.
+	  Ten en cuenta aquellas estrategias de despliegue que permitan minimizar el tiempo de indisponibilidad, así como la posibilidad de que el proceso falle y haya que volver atrás.
 
   # Implementación de la Solución
 
