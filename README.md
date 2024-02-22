@@ -248,14 +248,18 @@ curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.
 *********************************************************************************************************************************
 
 ## DESPLIEGUE
+# APROVISIONAMIENTO Y CONFIGURACIÓN DE HOSTS. PRUEBAS EN LOCALHOST. WSL
 
-APROVISIONAMIENTO Y CONFIGURACIÓN DE HOSTS. PRUEBAS EN LOCALHOST. WSL
+* Ejecutar Ansible en Linux en desarrollo, dev. (aprovisionamiento para app e imagen de postgresql)
 
-Ejecutar Ansible en Linux
+	Crea archivo secrets.yml -> ansible-vault encrypt secrets.yml
 
-Crea archivo secrets.yml  -> ansible-vault encrypt secrets.yml
+	ansible-playbook -i inventory.yml playbook-dev.yml --ask-vault-pass -> contraseña=juan
 
-ansible-playbook -i inventory.yml playbook.yml --ask-vault-pass ->  contraseña=juan
+*Ejecutar Ansible en Linux en producción, prod.(aprovisionamiento para app y base de dato postpresql)
 
-TASK [Crear base de datos y usuario en PostgreSQL] **************************************************************************fatal: [localhost]: FAILED! => {"changed": false, "msg": "unable to connect to database: connection to server on socket \"/var/run/********ql/.s.PGSQL.5432\" failed: fe_sendauth: no password supplied\n"}
-...ignoring
+	Crea archivo secrets.yml -> ansible-vault encrypt secrets.yml
+
+	ansible-playbook -i inventory.yml playbook-prod.yml ->
+
+TASK [Crear base de datos y usuario en PostgreSQL] **************************************************************************fatal: [localhost]: FAILED! => {"changed": false, "msg": "unable to connect to database: connection to server on socket "/var/run/********ql/.s.PGSQL.5432" failed: fe_sendauth: no password supplied\n"} ...ignoring
