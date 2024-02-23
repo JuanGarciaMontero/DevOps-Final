@@ -5,72 +5,87 @@
 
        Introducción:
 
-        La aplicación es una aplicación web escrita en Python con el framework Flask, diseñada para gestionar nombres de usuarios en una base de datos.
+        La aplicación es una aplicación web escrita en Python con el framework Flask,
+         diseñada para gestionar nombres de usuarios en una base de datos.
 
        Arquitectura de Capas:
 
-         La aplicación sigue una arquitectura de dos capas, ya que el frontend no se implementa en esta solución:
+         La aplicación sigue una arquitectura de dos capas, ya que el frontend no se 
+         implementa en esta solución:
+
            - Backend: Lógica de la aplicación implementada en Flask.
            - Base de Datos: PostgreSQL utilizada para almacenar nombres de usuario.
 		   
        Componentes Principales:
 
-         - Servidor Flask: Gestiona las solicitudes HTTP, maneja la lógica de la aplicación y conecta con la base de datos.
+         - Servidor Flask: Gestiona las solicitudes HTTP, maneja la lógica de la aplicación y
+          conecta con la base de datos.
          - Base de Datos PostgreSQL: Almacena los nombres de usuarios.
 		 
        Manejo de Datos:
 
-         La base de datos contiene una base de datos "ejer_final" con campos como id y name. La interacción con la base de datos se realiza a través de consultas SQL utilizando el ORM de Flask-SQLAlchemy.
+         La base de datos contiene una base de datos "ejer_final" con campos como id y name. 
+         La interacción con la base de datos se realiza a través de consultas SQL utilizando 
+         el ORM de Flask-SQLAlchemy.
 
      2. Definición de la Arquitectura Cloud
 
         Elección de Proveedor Cloud:
 
-          Se ha elegido AWS como proveedor de servicios en la nube debido a su amplia variedad de servicios, escalabilidad y confiabilidad.
+          Se ha elegido AWS como proveedor de servicios en la nube debido a su amplia variedad
+          de servicios, escalabilidad y confiabilidad.
 
         Despliegue en la Nube:
 
-          La aplicación se despliega utilizando Cloudformation con grupos de seguridad, pares de claves y balanceadores de carga.
+          La aplicación se despliega utilizando Cloudformation con grupos de seguridad, pares 
+          de claves y balanceadores de carga.
 
         Escalabilidad y Tolerancia a Fallos:
 
-          La aplicación es escalable horizontalmente con instancias de EC2 adicionales para garantizar disponibilidad. Para automatizar el escalado se puede implementar Elastic Beanstalk.
+          La aplicación es escalable horizontalmente con instancias de EC2 adicionales para 
+          garantizar disponibilidad. Para automatizar el escalado se puede implementar Elastic Beanstalk.
 
       3. Descripción del Ciclo de Vida
 
         Desarrollo:
 
-        Se sigue una metodología ágil con sprints de dos semanas. El código se gestiona a través de un repositorio Git, y las tareas se gestionan con Jira.
+        Se sigue una metodología ágil con sprints de dos semanas. El código se gestiona a través 
+        de un repositorio Git, y las tareas se gestionan con Jira.
 
   ![imagen Jira Github](https://www.bitband.com/blog/wp-content/uploads/2022/04/Jira-Git-CTA.png)
 
          Pruebas:
 
-           Las pruebas unitarias y de covertura se ejecutan automáticamente en cada confirmación a través de un pipeline action de Github.
+           Las pruebas unitarias y de covertura se ejecutan automáticamente en cada confirmación 
+          a través de un pipeline action de Github.
 
   ![imagen GitHub Jenkins o Actions Github -> Elastic Beanstalk](https://assets-global.website-files.com/62b1b25a5edaf66f5056b068/62d1343221adea5442f119cd_Deployment-processes-of-Elastic-Beanstalk.png)
 
          Despliegue y Mantenimiento:
 
-           El despliegue se realiza automáticamente desde el repositorio Git a través de AWS Elastic Beanstalk. Las actualizaciones se implementan con mínimo tiempo de inactividad.
+          El despliegue se realiza automáticamente desde el repositorio Git a través de 
+          AWS Elastic Beanstalk. Las actualizaciones se implementan con mínimo tiempo de inactividad.
 
   ![imagen AWS Elastic Beanstalk](https://media.geeksforgeeks.org/wp-content/uploads/20230418121110/aws-beanstalk.webp)
 
          Monitorización y Registro:
 
-           Se utiliza AWS CloudWatch para la monitorización de métricas y logs. Las alertas se configuran para notificar eventos críticos.
+           Se utiliza AWS CloudWatch para la monitorización de métricas y logs. 
+           Las alertas se configuran para notificar eventos críticos.
 
   ![imagen AWS CloudWatch](https://docs.aws.amazon.com/images/AmazonCloudWatch/latest/monitoring/images/CW-default-dashboard-update.png)
 
          Seguridad:
 
-           Se aplican prácticas de seguridad, como el cifrado de datos en reposo y en tránsito, y se gestionan los accesos a los recursos mediante roles IAM.
+           Se aplican prácticas de seguridad, como el cifrado de datos en reposo y en tránsito, 
+          y se gestionan los accesos a los recursos mediante roles IAM.
       
   ![imagen AWS IAM](https://i.ytimg.com/vi/pmemtFjlApQ/maxresdefault.jpg)
 
          Ciclo de Vida Completo:
 
-           Integración continua, pruebas automáticas, despliegue y monitorización están completamente integrados en un ciclo de vida continuo.
+           Integración continua, pruebas automáticas, despliegue y monitorización están 
+           completamente integrados en un ciclo de vida continuo.
 
   ![imagen Ciclo de Vida](https://i.ytimg.com/vi/x2IN28DKK3o/sddefault.jpg)
            
@@ -83,49 +98,79 @@
 
     - Clonar a un repositorio git la aplicación ejemplo.
     - Realizar test unitarios a nuevas características incorporadas en nuestra aplicación.
-    - Documentación de: arquitectura de software, como se ejecutan los test, como se ejecutan localmente el entorno de pruebas y el modelo de ramas GIT.
+    - Documentación de: arquitectura de software, como se ejecutan los test,
+      como se ejecutan localmente el entorno de pruebas y el modelo de ramas GIT.
     - Test de cobertura de al menos el 80% de las líneas de código
+    
 # 2- Creación de pipelen de CI. Jenkins.
 
   ![imagen Jenkins|50](https://miro.medium.com/v2/resize:fit:951/1*H9jHoRaRnJ0KnqmPs6xeUA.jpeg )
 
     - Clonado de código fuente
     - Ejecución de test
-	  - Creación imagen Docker para ejecutar software en un contenedor
-	  - Subida el resultadoa algún Registro (privado,EC2, Docker Hub, ...) siempre que sea la rama Dev o main.
-	  - Documentar que hace Jenkins y Git, y en cada push se realice un job en Jenkins.
+    - Creación imagen Docker para ejecutar software en un contenedor
+    - Subida el resultadoa algún Registro (privado,EC2, Docker Hub, ...) 
+      siempre que sea la rama Dev o main.
+      - Documentar que hace Jenkins y Git, y en cada push se realice un job en Jenkins.
+
 # 3- Infraestructura como código
 
   ![imagen AWS CludFormation](https://www.inbest.cloud/hs-fs/hubfs/Alondra/que%20es%20aws%20cloud%20formation.jpg)
 
-    - El código generado debe estar en un repositorio de Git, que puede ser el mismo que el de la aplicación o no (está decisión debe ser justificada). Utilizamos el mismo repositorio Git ya que en la rama Ops tendremos la infraestructura tanto para desarrollo Dev como para produccion. Se diferencian en que en desarrollo utilizamos una imagen de posgresql y en produccion (main) instalamos postgresql.
-	  - Se debe acompañar al código de IaC de instrucciones precisas sobre cómo conseguimos ejecutar la creación/actualización de la infraestructura, incluyendo si es necesario qué valores o variables de entorno debemos tener en cuenta.
-	  - Tampoco debemos olvidar que puede haber más de un entorno de despliegue y que nos podría interesar regenerar la misma infraestructura, con un diferente set de recursos, en otro VPC.
+    - El código generado debe estar en un repositorio de Git, que puede ser el mismo 
+    que el de la aplicación o no (está decisión debe ser justificada). Utilizamos el mismo 
+    repositorio Git ya que en la rama Ops tendremos la infraestructura tanto para desarrollo Dev
+    como para produccion. Se diferencian en que en desarrollo utilizamos una imagen de posgresql 
+    y en produccion (main) instalamos postgresql.
+    - Se debe acompañar al código de IaC de instrucciones precisas sobre cómo conseguimos 
+    ejecutar la creación/actualización de la infraestructura, incluyendo si es necesario 
+    qué valores o variables de entorno debemos tener en cuenta.
+    - Tampoco debemos olvidar que puede haber más de un entorno de despliegue y que nos podría 
+    interesar regenerar la misma infraestructura, con un diferente set de recursos, en otro VPC.
+
 # 4- Despliegue
 
   ![imagen Ansible Architecture](https://www.exevi.com/wp-content/uploads/2021/04/ansible-automation-engine-768x450.png)
 
-    El objetivo es el de generar un playbook de Ansible que sepa desplegar una nueva versión de una imagen Docker en la infraestructura que nosotros mismos hemos declarado y generado.
+    El objetivo es el de generar un playbook de Ansible que sepa desplegar una nueva versión 
+    de una imagen Docker en la infraestructura que nosotros mismos hemos declarado y generado.
 	  El único input que deberíamos necesitar es la versión por desplegar o una URL al artefacto/imagen.
-	  Ten en cuenta aquellas estrategias de despliegue que permitan minimizar el tiempo de indisponibilidad, así como la posibilidad de que el proceso falle y haya que volver atrás.
+	  Ten en cuenta aquellas estrategias de despliegue que permitan minimizar el tiempo de 
+    indisponibilidad, así como la posibilidad de que el proceso falle y haya que volver atrás.
 
 ## Implementación de la Solución
 
 # 1- CREACIÓN DE UN ENTORNO LOCAL DE DESARROLLO:
 
-    IDE elegido es Visual Studio Code por ser muy versatil al poder utilizar multiples lenguajes y tener plugins adaptados a ellos.
-    Necesidad de tener instalado Python en version igual o superior a la 3, de forma global en la máquina local. Ya que es el lenguaje utilizado en la aplicación sobre la que tenemos que desarrollar la solución. Una vez elegido la ruta y nombre de la carpeta que llevará nuestro proyecto " DevOps-Final", lo primero es clonar el repositorio público creado en github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto. A continuación copiamos los archivos y carpetas de la aplicación en nuestro proyecto.
-    A continuación tenemos que aislar nuestro proyecto del resto del equipo, para poder utilizar la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos un entorno virtual y cargamos las dependencias en su versión necesarias para nuestro proyecto. La aplicación en local podemos arrancarla con "python run.py".
+    IDE elegido es Visual Studio Code por ser muy versatil al poder utilizar multiples 
+    lenguajes y tener plugins adaptados a ellos.
+    Necesidad de tener instalado Python en version igual o superior a la 3, de forma global 
+    en la máquina local. Ya que es el lenguaje utilizado en la aplicación sobre la que tenemos 
+    que desarrollar la solución. Una vez elegido la ruta y nombre de la carpeta que llevará 
+    nuestro proyecto " DevOps-Final", lo primero es clonar el repositorio público creado en 
+    github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto. 
+    A continuación copiamos los archivos y carpetas de la aplicación en nuestro proyecto.
+    A continuación tenemos que aislar nuestro proyecto del resto del equipo, para poder utilizar
+     la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos 
+     un entorno virtual y cargamos las dependencias en su versión necesarias para nuestro proyecto. 
+     La aplicación en local podemos arrancarla con "python run.py".
+
     Para crear un entorno local de desarrollo, sigue estos pasos:
+
       1. Configuración del Entorno:
+
          - python -m venv env
          - source env/Scripts/activate
+
       2. Instalación de Dependencias:
+
          - Instala las dependencias del proyecto: pip install -r requirements.txt.
       3. Ejecución Local:
+
          - Ejecuta la aplicación localmente: python run.py.
          - Accede a la aplicación en tu navegador: http://localhost:5000/data
       4. Pruebas Locales:
+
          - Asegúrate de que todas las funcionalidades se ejecuten correctamente en el entorno local.
     
 # Crear Repositorio e GitHub con usuario JuanGarciaMontero con nombre "DevOps-Final"
@@ -151,7 +196,8 @@
 
 ## PRUEBAS EN LOCAL DE LA APP
 
-    Nos situamos en la rama Dev(Desarrollo). Si todo vá bien clonamos con la rama main(producción).
+    Nos situamos en la rama Dev(Desarrollo). 
+    Si todo vá bien clonamos con la rama main(producción).
 
     Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
       Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
