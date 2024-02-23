@@ -31,7 +31,7 @@
          Desarrollo:
            Se sigue una metodología ágil con sprints de dos semanas. El código se gestiona a través de un repositorio Git, y las tareas se gestionan con Jira.
          Pruebas:
-           Las pruebas unitarias y de integración se ejecutan automáticamente en cada confirmación a través de un pipeline de CI/CD.
+           Las pruebas unitarias y de covertura se ejecutan automáticamente en cada confirmación a través de un pipeline action de Github.
          Despliegue y Mantenimiento:
            El despliegue se realiza automáticamente desde el repositorio Git a través de AWS Elastic Beanstalk. Las actualizaciones se implementan con mínimo tiempo de inactividad.
          Monitorización y Registro:
