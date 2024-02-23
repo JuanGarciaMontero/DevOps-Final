@@ -101,7 +101,7 @@
     - Documentación de: arquitectura de software, como se ejecutan los test,
       como se ejecutan localmente el entorno de pruebas y el modelo de ramas GIT.
     - Test de cobertura de al menos el 80% de las líneas de código
-    
+
 # 2- Creación de pipelen de CI. Jenkins.
 
   ![imagen Jenkins|50](https://miro.medium.com/v2/resize:fit:951/1*H9jHoRaRnJ0KnqmPs6xeUA.jpeg )
@@ -165,15 +165,13 @@
       2. Instalación de Dependencias:
 
          - Instala las dependencias del proyecto: pip install -r requirements.txt.
+
       3. Ejecución Local:
 
          - Ejecuta la aplicación localmente: python run.py.
          - Accede a la aplicación en tu navegador: http://localhost:5000/data
-      4. Pruebas Locales:
-
-         - Asegúrate de que todas las funcionalidades se ejecuten correctamente en el entorno local.
     
-# Crear Repositorio e GitHub con usuario JuanGarciaMontero con nombre "DevOps-Final"
+# Crear Repositorio en GitHub con usuario JuanGarciaMontero con nombre "DevOps-Final"
 
   ## Crear en local una carpeta por cada rama. Dev, Ops y QA.
 
