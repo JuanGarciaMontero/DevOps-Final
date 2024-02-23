@@ -12,19 +12,31 @@ class Config:
 
     # Add other configuration variables as needed
 
+
 class DevelopmentConfig(Config):
-    FLASK_ENV = 'development'
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@0.0.0.0:5432/ejer_final'
+
 
 class ProductionConfig(Config):
-    FLASK_ENV = 'production'
-    DEBUG = True
+    DEBUG = False
+    # Add other production configurations here
+
+class TestingConfig(Config):
+    TESTING = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@0.0.0.0:5432/ejer_final'
-    # Configuración para la base de datos de producción
+    # O la configuración adecuada para tu base de datos de prueba
 
+class CoverageConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@0.0.0.0:5432/ejer_final'
+    COVERAGE = True
+    COVERAGE_DIR = os.path.join(basedir, 'coverage')  
+
+# Dictionary to map environment names to configuration classes
 config_dict = {
-    'development': DevelopmentConfig,
-    'production': ProductionConfig
+    "development": DevelopmentConfig,
+    "production": ProductionConfig,
+    "testing": TestingConfig,
+    "coverage": CoverageConfig,
+    # Add other environments if needed
 }
-
