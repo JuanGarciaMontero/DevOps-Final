@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyElasticBeanstalkApplication:
+    Type: 'AWS::ElasticBeanstalk::Application'
+    Properties:
+      ApplicationName: MyElasticBeanstalkApp
+
+  MyElasticBeanstalkEnvironment:
+    Type: 'AWS::ElasticBeanstalk::Environment'
+    Properties:
+      ApplicationName: !Ref MyElasticBeanstalkApplication
+      EnvironmentName: MyElasticBeanstalkEnv
+      SolutionStackName: aws_beanstalk_solution_stack
+      Tier:
+        Type: Standard
+      OptionSettings:
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: PARAM1
+          Value: 'VALUE1'
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: PARAM2
+          Value: 'VALUE2'
+        # Agrega más configuraciones según sea necesario
+      VersionLabel: GitHub
+
+  MyElasticBeanstalkSourceBundle:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: MyElasticBeanstalkSourceBucket
+
+  MyElasticBeanstalkSource:
+    Type: 'AWS::ElasticBeanstalk::ApplicationVersion'
+    Properties:
+      ApplicationName: !Ref MyElasticBeanstalkApplication
+      SourceBundle:
+        S3Bucket: !Ref MyElasticBeanstalkSourceBucket
+        S3Key: /path/to/your/application/source.zip
