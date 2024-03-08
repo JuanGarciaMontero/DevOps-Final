@@ -18,4 +18,4 @@ RUN /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt"
 EXPOSE 5000
 
 # Run app.py when the container launches
-CMD ["/bin/bash", "-c", "source venv/bin/activate && manage.sh && python manage.py runserver"]
+CMD ["/bin/bash", "-c", "manage.sh && python manage.py"]
