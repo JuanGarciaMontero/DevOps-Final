@@ -39,18 +39,18 @@ pipeline {
                         docker run -d -it \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
-                        juangarciamontero/app15:1.0.51
+                        juangarciamontero/app15:1.0.52
                     """
 
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
-                    
+
                     sh 'sleep 20'
                     sh "docker exec ${appContainerId} python --version"
-                    sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
-                    sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
-                    sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Luis Manuel\"}' http://127.0.0.1:5000/data"
-                    sh "docker exec ${appContainerId} curl http://127.0.0.1:5000/data"
-                    sh "docker exec ${appContainerId} curl -X DELETE http://127.0.0.1:5000/data/1"
+                    curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' http://127.0.0.1:5000/data
+                    curl -X POST -H "Content-Type: application/json" -d '{"name": "Pedro"}' http://127.0.0.1:5000/data
+                    curl -X POST -H "Content-Type: application/json" -d '{"name": "Luis Manuel"}' http://127.0.0.1:5000/data
+                    curl http://127.0.0.1:5000/data
+                    curl -X DELETE http://127.0.0.1:5000/data/1
 
                     def isAppContainerRunning = sh(script: "docker inspect -f '{{.State.Running}}' ${appContainerId}", returnStatus: true).toInteger()
 
