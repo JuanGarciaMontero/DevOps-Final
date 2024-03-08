@@ -45,6 +45,7 @@ pipeline {
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
                     
                     sh 'sleep 20'
+                    sh "docker logs ${appContainerId}"
                     sh "docker exec ${appContainerId} python --version"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
