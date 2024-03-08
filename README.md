@@ -284,10 +284,10 @@ TOTAL                60     10    83%
 
 Para test(dockerfile). Empaquetamos nuestra app con los requerimientos en un docker.
 
-docker build -t juangarciamontero/app15:1.0.1 .
+docker build -t juangarciamontero/app15:1.0.51 .
 docker images
-docker tag juangarciamontero/app15:1.0.1 juangarciamontero/app15:1.0.1
-docker push juangarciamontero/app15:1.0.1
+docker tag juangarciamontero/app15:1.0.51 juangarciamontero/app15:1.0.51
+docker push juangarciamontero/app15:1.0.51
 
 Al ejecutar Jenkinsfile desde Jenkins apuntando a un repo e Github, produce error al pasar
 los test unitario y no continua, ya que no encuentra la base de datos Postgresql. Implemento la

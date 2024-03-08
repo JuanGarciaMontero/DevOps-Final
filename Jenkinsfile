@@ -39,15 +39,12 @@ pipeline {
                         docker run -d -it \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
-                        juangarciamontero/app15:1.0.50
+                        juangarciamontero/app15:1.0.51
                     """
 
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
 
                     sh "docker exec ${appContainerId} python --version"
-                    sh "docker exec ${appContainerId} sh manage.sh"
-                    sh "docker exec ${appContainerId} python run.py"
-                    sh 'sleep 5'
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Luis Manuel\"}' http://127.0.0.1:5000/data"
