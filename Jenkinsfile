@@ -39,7 +39,7 @@ pipeline {
                         docker run -d -it \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
-                        juangarciamontero/app15:1.0.65
+                        juangarciamontero/app15:1.0.66
                     """
 
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
@@ -53,6 +53,8 @@ pipeline {
 
                     // Muestra la ruta actual en los logs de Jenkins
                     echo "Ruta actual en el contenedor: ${currentDir}"
+
+                    sh "docker exec ${appContainerId} ls -l /"
 
                     // Ejecuta manage.sh en la ruta actual
                     sh "docker exec ${appContainerId} /bin/bash -c \"${currentDir}/manage.sh\""
