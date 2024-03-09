@@ -39,7 +39,7 @@ pipeline {
                         docker run -d -it \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
-                        juangarciamontero/app15:1.0.73
+                        juangarciamontero/app15:1.0.74
                     """
 
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
@@ -57,10 +57,10 @@ pipeline {
                     sh "docker exec ${appContainerId} ls -l /"
 
                     // Asegúrate de que manage.sh tenga permisos de ejecución
-                    sh "docker exec ${appContainerId} chmod +x /manage.sh"
+                    sh "docker exec ${appContainerId} chmod +x manage.sh"
 
                     // Ejecuta manage.sh en la ruta actual
-                    sh "docker exec ${appContainerId} /bin/bash -c \"/manage.sh\""
+                    sh "docker exec ${appContainerId} /bin/bash -c \"manage.sh\""
 
                     sh "docker exec ${appContainerId} python run.py"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
