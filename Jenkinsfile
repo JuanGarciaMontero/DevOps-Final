@@ -39,7 +39,7 @@ pipeline {
                         docker run -d -it \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
-                        juangarciamontero/app15:1.0.64
+                        juangarciamontero/app15:1.0.65
                     """
 
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
@@ -47,8 +47,16 @@ pipeline {
                     sh 'sleep 20'
                     sh "docker logs ${appContainerId}"
                     sh "docker exec ${appContainerId} python --version"
-                    sh "docker exec ${appContainerId} /bin/bash -c \"manage.sh\""
-                    sh "docker exec ${appContainerId} python run.py"
+
+                    // Obtiene la ruta actual dentro del contenedor
+                    def currentDir = sh(script: "docker exec ${appContainerId} pwd", returnStdout: true).trim()
+
+                    // Muestra la ruta actual en los logs de Jenkins
+                    echo "Ruta actual en el contenedor: ${currentDir}"
+
+                    // Ejecuta manage.sh en la ruta actual
+                    sh "docker exec ${appContainerId} /bin/bash -c \"${currentDir}/manage.sh\""
+                    sh "docker exec ${appContainerId} /bin/bash -c \"${currentDir}/python run.py\""
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Luis Manuel\"}' http://127.0.0.1:5000/data"
