@@ -58,7 +58,8 @@ pipeline {
 
                     // Ejecuta manage.sh directamente
                     sh "docker exec ${appContainerId} sh 'manage.sh'"         
-                    sh "docker exec ${appContainerId} python /run.py"
+                    sh "docker exec ${appContainerId} python manage.py"
+                    sh "docker exec ${appContainerId} python run.py"
                     sh 'sleep 20'
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
