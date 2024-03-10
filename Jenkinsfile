@@ -57,13 +57,12 @@ pipeline {
                     sh "docker exec ${appContainerId} ls -l /"
 
                     // Otorga permisos de ejecución al script manage.sh
-                    sh "docker exec ${appContainerId} chmod 766 /manage.sh"
+                    sh "docker exec ${appContainerId} chmod +x /manage.sh"
                     sh "docker exec ${appContainerId} cat /manage.sh"
 
 
                     // Ejecuta manage.sh directamente
-                    sh "docker exec ${appContainerId} /bin/bash -c \"/manage.sh\""
-
+                    sh "docker exec ${appContainerId} /bin/bash -c '/manage.sh'"
                     sh "docker exec ${appContainerId} python run.py"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Juan\"}' http://127.0.0.1:5000/data"
                     sh "docker exec ${appContainerId} curl -X POST -H \"Content-Type: application/json\" -d '{\"name\": \"Pedro\"}' http://127.0.0.1:5000/data"
