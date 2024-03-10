@@ -58,6 +58,8 @@ pipeline {
 
                     // Otorga permisos de ejecución al script manage.sh
                     sh "docker exec ${appContainerId} chmod 766 /manage.sh"
+                    sh "docker exec ${appContainerId} cat /manage.sh"
+
 
                     // Ejecuta manage.sh directamente
                     sh "docker exec ${appContainerId} /bin/bash -c \"/manage.sh\""
