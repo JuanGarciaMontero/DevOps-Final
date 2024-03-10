@@ -1,6 +1,9 @@
 # Use an official Python runtime as a parent image
 FROM python:3.8
 
+# Install Bash
+RUN apt-get update && apt-get install -y bash
+
 # Set the working directory
 WORKDIR /
 
