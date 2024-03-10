@@ -39,7 +39,7 @@ pipeline {
                         docker run -d -it \
                         -p 5000:5000 \
                         --name ${env.APP_CONTAINER_NAME} \
-                        juangarciamontero/app15:1.0.76
+                        juangarciamontero/app15:1.0.77
                     """
 
                     def appContainerId = sh(script: appCommand, returnStdout: true).trim()
