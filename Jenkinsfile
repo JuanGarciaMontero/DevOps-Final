@@ -1,8 +1,10 @@
 DOCKER_IMAGE_NAME = "juangarciamontero/app25"
+
 pipeline {
     agent any
+
     stages {
-        stage(Pre) {
+        stage('Pre') {
             parallel {
                 stage('Test') {
                     agent {
@@ -12,57 +14,68 @@ pipeline {
                     }
                     stages {
                         stage('Instalar Dependencias') {
-                            dir('Devops-Final') {
-                                sh "pip install -r requirements.txt"
+                            steps {
+                                dir('Devops-Final') {
+                                    script {
+                                        sh "pip install -r requirements.txt"
+                                    }
+                                }
                             }
                         }
                         stage('Linting') {
-                            steps{
+                            steps {
                                 dir('Devops-Final') {
-                                    sh "flake8"
+                                    script {
+                                        sh "flake8"
+                                    }
                                 }
                             }
                         }
                         stage('Coverage') {
-                            steps{
+                            steps {
                                 dir('Devops-Final') {
-                                    sh """
-                                    pytest --cov=app tests/
-                                    """
+                                    script {
+                                        sh """
+                                        pytest --cov=app tests/
+                                        """
+                                    }
                                 }
                             }
                         }
                     }
-
                 }
                 stage('Imagen') {
-                    agent: any
+                    agent any
                     steps {
                         dir('Devops-Final') {
-                            sh "docker build --tag image -f Dokerfile .."
+                            script {
+                                sh "docker build --tag image -f Dockerfile .."
+                            }
                         }
                     }
                 }
             }
         }
 
-    stage('Image') {
-        when {
-            anyOf {
-                branch 'main'; branch 'Dev'
+        stage('Image') {
+            when {
+                anyOf {
+                    branch 'main'; branch 'Dev'
+                }
+            }
+            environment {
+                DOCKER = credentials('dockerhub-credentials')
+                VERSION = "1.0.1"
+            }
+            steps {
+                script {
+                    sh """
+                    docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
+                    docker tag image \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    docker push \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    """
+                }
             }
         }
-        environment {
-            DOCKER = credentials('dockerhub-credentials')
-            VERSION = "1.0.1"
-        }
-        steps {
-            sh """
-                docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
-                docker tag image ${DOCKER_IMAGE_NAME}:${VERSION}
-                docker push ${DOCKER_IMAGE_NAME}:${VERSION}
-            """
-        }
-    }
     }
 }
