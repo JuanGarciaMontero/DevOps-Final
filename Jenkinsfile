@@ -15,7 +15,7 @@ pipeline {
                     stages {
                         stage('Instalar Dependencias') {
                             steps {
-                                dir('Devops-Final') {
+                                dir('DEVOPS-FINAL') {
                                     script {
                                         sh "pip install -r requirements.txt"
                                     }
@@ -24,7 +24,7 @@ pipeline {
                         }
                         stage('Linting') {
                             steps {
-                                dir('Devops-Final') {
+                                dir('DEVOPS-FINAL') {
                                     script {
                                         sh "flake8"
                                     }
@@ -33,7 +33,7 @@ pipeline {
                         }
                         stage('Coverage') {
                             steps {
-                                dir('Devops-Final') {
+                                dir('DEVOPS-FINAL') {
                                     script {
                                         sh """
                                         pytest --cov=app tests/
@@ -47,7 +47,7 @@ pipeline {
                 stage('Imagen') {
                     agent any
                     steps {
-                        dir('Devops-Final') {
+                        dir('DEVOPS-FINAL') {
                             script {
                                 sh "docker build --tag image -f Dockerfile .."
                             }
