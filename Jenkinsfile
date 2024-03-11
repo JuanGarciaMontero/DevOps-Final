@@ -16,8 +16,8 @@ pipeline {
                             steps {
                                 script {
                                     // Ajustar los permisos del directorio de caché de pip en el directorio de inicio
-                                    sh "chmod -R 777 $HOME/.cache"
-                                    sh "chown -R $USER $HOME/.cache"       
+                                    sh "chmod -R 777 /var/lib/jenkins/.cache"
+                                    sh "chown -R jenkins:jenkins /var/lib/jenkins/.cache"       
             
                                     // Ir al directorio del proyecto
                                     dir('DEVOPS-FINAL') {
