@@ -18,8 +18,8 @@ pipeline {
                                 dir('DEVOPS-FINAL') {
                                     script {
                                         // Ajustar los permisos del directorio de caché de pip
-                                        sh "chmod -R 777 /.cache/pip"
-                                        sh "chown -R $USER /.cache/pip"
+                                        sh "chmod -R 777 /.cache"
+                                        sh "chown -R $USER /.cache"
 
                                         // Instalar dependencias
                                         sh "pip install -r requirements.txt"
