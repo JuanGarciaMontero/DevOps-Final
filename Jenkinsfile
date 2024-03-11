@@ -37,7 +37,7 @@ pipeline {
                     script {
                         docker.image("${appContainerId}").inside {
                             sh "python --version"
-                            sh "manage.sh"
+                            sh "sh manage.sh"
                             sh "python run.py"
                             sh "sleep 5"
                             sh "pytest ./tests"
