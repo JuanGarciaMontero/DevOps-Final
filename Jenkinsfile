@@ -17,6 +17,8 @@ pipeline {
                             steps {
                                 dir('DEVOPS-FINAL') {
                                     script {
+                                        sh "sudo chmod -R 777 /.cache/pip"
+                                        sh "sudo chown -R $USER /.cache/pip"
                                         sh "pip install -r requirements.txt"
                                     }
                                 }
