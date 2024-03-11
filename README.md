@@ -167,7 +167,9 @@
          - Instala las dependencias del proyecto: pip install -r requirements.txt.
 
       3. Ejecución Local:
-
+         
+         - Arrancar imagen docker de Posgresql 13: 
+            docker run -d -p 5432:5432 -e POSTGRES_DB='ejer_final' -e POSTGRES_USER='postgres' -e POSTGRES_PASSWORD='postgres' --name 'postgres-container' postgres:13
          - Ejecuta la aplicación localmente: python run.py.
          - Accede a la aplicación en tu navegador: http://localhost:5000/data
     
