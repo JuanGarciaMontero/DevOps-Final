@@ -17,7 +17,7 @@ pipeline {
                                 script {
                                     // Ajustar los permisos del directorio de caché de pip en el directorio de inicio
                                     sh "chmod -R 777 ~/.cache"
-                                    sh "chown -R $USER ~/.cache"
+                                    sh "chown -R $USER ~/.cache"        
             
                                     // Ir al directorio del proyecto
                                     dir('DEVOPS-FINAL') {
