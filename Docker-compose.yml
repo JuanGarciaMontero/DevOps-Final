@@ -4,7 +4,7 @@ services:
   app:
     build:
       dockerfile: ./
-      context: ./
+      context: ../
     ports:
       - "5000:5000"
     environment:
