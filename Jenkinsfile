@@ -1,5 +1,4 @@
 DOCKER_IMAGE_NAME = "juangarciamontero/app25"
-
 pipeline {
     agent any
 
@@ -17,10 +16,9 @@ pipeline {
                             steps {
                                 dir('DEVOPS-FINAL') {
                                     script {
-                                        // Ajustar los permisos del directorio de caché de pip en un entorno virtual
-                                        sh "chmod -R 777 venv/lib/python*/site-packages/pip/_vendor/requests/cacert.pem"
-                                        sh "chown -R $USER venv/lib/python*/site-packages/pip/_vendor/requests/cacert.pem"
-
+                                        // Ajustar los permisos del directorio de caché de pip en el directorio de inicio
+                                        sh "chmod -R 777 ~/.cache"
+                                        sh "chown -R $USER ~/.cache"
 
                                         // Instalar dependencias
                                         sh "pip install -r requirements.txt"
@@ -66,7 +64,7 @@ pipeline {
         stage('Image') {
             when {
                 anyOf {
-                    branch 'main'; branch 'Dev'
+                    branch 'main'; branch 'QA'
                 }
             }
             environment {
