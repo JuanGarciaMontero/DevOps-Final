@@ -16,7 +16,8 @@ pipeline {
                             steps {
                                 script {
                                     dir('./') {
-                                        sh "chmod -R 755 ~/.local"
+                                        sh "python -m venv env"
+                                        sh "source env/Scripts/activate"
                                         sh "pip install -r requirements.txt"
                                     }
                                  }
