@@ -1,41 +1,81 @@
+DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
 
     stages {
-
-        stage('Iniciar contenedor con Python y app') {
-            steps {
-                script {
-                    // Crear y ejecutar el contenedor con la aplicación Python
-                    def appContainerId = sh(script: "docker run -d -it -p 5000:5000 --name app-container python:3.9-slim", returnStdout: true).trim()
-
-                    // Esperar a que la aplicación esté lista (ajustar según tus necesidades)
-                    sh 'sleep 10'
-
-                    // Ejecutar comandos dentro del contenedor de la aplicación
-                    script {
-                        docker.image("${appContainerId}").inside {
-                            sh "python --version"
-                            sh "pytest ./tests"
-                            sh "pytest --cov=app ./tests"
+        stage('Pre') {
+            parallel {
+                stage('Test') {
+                    agent {
+                        docker {
+                            image 'python:3.9-slim'
+                            args '-u root' // Esto ejecutará el contenedor como root
                         }
                     }
-
-                    // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
-                    env.APP_CONTAINER_ID = appContainerId
+                    stages {
+                        stage('Instalar Dependencias') {
+                            steps {
+                                script {
+                                    dir('DEVOPS-FINAL') {
+                                        sh "pip install -r requirements.txt"
+                                    }
+                                 }
+                            }
+                        }
+                        stage('Linting') {
+                            steps {
+                                dir('DEVOPS-FINAL') {
+                                    script {
+                                        sh "flake8"
+                                    }
+                                }
+                            }
+                        }
+                        stage('Coverage') {
+                            steps {
+                                dir('DEVOPS-FINAL') {
+                                    script {
+                                        sh """
+                                        pytest --cov=app tests/
+                                        """
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('Imagen') {
+                    agent any
+                    steps {
+                        dir('DEVOPS-FINAL') {
+                            script {
+                                sh "docker build --tag image -f Dockerfile .."
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
 
-    post {
-        always {
-            // Detener y eliminar los contenedores después de la ejecución del pipeline
-            script {
-                sh "docker stop ${env.APP_CONTAINER_ID}"
-                sh "docker rm ${env.APP_CONTAINER_ID}"
+        stage('Image') {
+            when {
+                anyOf {
+                    branch 'main'; branch 'QA'
+                }
             }
-            echo "Fin del pipeline"
+            environment {
+                DOCKER = credentials('dockerhub-credentials')
+                VERSION = "1.0.1"
+            }
+            steps {
+                script {
+                    sh """
+                    docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
+                    docker tag image \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    docker push \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    """
+                }
+            }
         }
     }
 }
