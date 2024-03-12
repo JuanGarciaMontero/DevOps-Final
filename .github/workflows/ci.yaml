@@ -41,7 +41,7 @@ jobs:
         python --version
         sh manage.sh & python run.py &
         sleep 
-        pytest flake8
+        python flake8
         pytest --cov=app ./tests
 
     - name: Check coverage
