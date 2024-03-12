@@ -16,6 +16,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('./') {
+                                        sh "chmod -R 755 ~/.local"
                                         sh "pip install -r requirements.txt"
                                     }
                                  }
