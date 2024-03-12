@@ -16,6 +16,8 @@ pipeline {
                             steps {
                                 script {
                                     dir('DEVOPS-FINAL') {
+                                        sh "bash ls app"
+                                        sh "bash chmod -R 755 app"
                                         sh "pip install -r app/requirements.txt"
                                     }
                                  }
