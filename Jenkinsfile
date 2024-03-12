@@ -1,9 +1,7 @@
 DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
-    options {
-        ansiColor('xterm')
-    }
+
     stages {
         stage('Pre') {
             parallel {
@@ -17,7 +15,7 @@ pipeline {
                         stage('Instalar Dependencias') {
                             steps {
                                 script {
-                                    dir('DEVOPS-FINAL') {
+                                    dir('devops-final') {
                                         sh "pip install -r requirements.txt"
                                     }
                                  }
@@ -25,7 +23,7 @@ pipeline {
                         }
                         stage('Linting') {
                             steps {
-                                dir('DEVOPS-FINAL') {
+                                dir('devops-final') {
                                     script {
                                         sh "flake8"
                                     }
@@ -34,7 +32,7 @@ pipeline {
                         }
                         stage('Coverage') {
                             steps {
-                                dir('DEVOPS-FINAL') {
+                                dir('devops-final') {
                                     script {
                                         sh """
                                         pytest --cov=app tests/
@@ -48,7 +46,7 @@ pipeline {
                 stage('Imagen') {
                     agent any
                     steps {
-                        dir('DEVOPS-FINAL') {
+                        dir('devops-final') {
                             script {
                                 sh "docker build --tag image -f Dockerfile .."
                             }
