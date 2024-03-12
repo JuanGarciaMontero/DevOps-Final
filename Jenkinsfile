@@ -9,6 +9,7 @@ pipeline {
                     agent {
                         docker {
                             image 'python:3.9-slim'
+                            args '-u root' // Esto ejecutará el contenedor como root
                         }
                     }
                     stages {
@@ -16,7 +17,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('DEVOPS-FINAL') {
-                                    sh "pip install -r app/requirements.txt"
+                                    sh "pip install -r requirements.txt"
                                     }
                                  }
                             }
