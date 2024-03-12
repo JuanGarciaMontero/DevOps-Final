@@ -16,8 +16,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('DEVOPS-FINAL') {
-                                    sh "pip install virtualenv && python -m venv venv"
-                                    sh "source venv/bin/activate && pip install -r requirements.txt"
+                                    sh "pip install -r requirements.txt"
                                     }
                                  }
                             }
