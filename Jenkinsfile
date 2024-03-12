@@ -1,4 +1,4 @@
-DOCKER_IMAGE_NAME = "juangarciamontero/app25"
+DOCKER_IMAGE_NAME = "juanito/qualentum-reto-final"
 pipeline {
     agent any
 
@@ -16,7 +16,6 @@ pipeline {
                             steps {
                                 script {
                                     dir('DEVOPS-FINAL') {
-                                        sh "ls"
                                         sh "pip install -r requirements.txt"
                                     }
                                  }
