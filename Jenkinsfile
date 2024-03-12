@@ -16,6 +16,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('DEVOPS-FINAL') {
+                                    sh "pip install upgrade"
                                     sh "pip install -r requirements.txt --user"
                                     }
                                  }
