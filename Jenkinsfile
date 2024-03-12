@@ -16,7 +16,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('devops-final') {
-                                        sh "sudo pip install -r requirements.txt"
+                                        sh "cd / && pip install -r requirements.txt"
                                     }
                                  }
                             }
