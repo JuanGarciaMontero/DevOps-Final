@@ -16,7 +16,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('DEVOPS-FINAL') {
-                                    sh "pip install -r requisitos.txt --user"
+                                    sh "pip install -r requirements.txt --user"
                                     }
                                  }
                             }
