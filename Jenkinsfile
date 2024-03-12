@@ -8,8 +8,7 @@ pipeline {
                 stage('Test') {
                     agent {
                         docker {
-                            image 'python:3.9-slim'
-                            args '-u root' // Esto ejecutará el contenedor como root
+                            image 'python:3.9.18-slim'
                         }
                     }
                     stages {
