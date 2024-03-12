@@ -15,14 +15,9 @@ pipeline {
                         stage('Instalar Dependencias') {
                             steps {
                                 script {
-                                    // Ajustar los permisos del directorio de caché de pip en el directorio de inicio
-                                    sh "chmod -R 777 /var/lib/jenkins/tools/pip"
-                                    sh "chown -R jenkins:jenkins /var/lib/jenkins/tools/pip" 
-            
-                                    // Ir al directorio del proyecto
                                     dir('DEVOPS-FINAL') {
-                                    // Instalar dependencias
-                                    sh "pip install -r requirements.txt"
+                                    sh "pip install virtualenv && python -m venv venv"
+                                    sh "source venv/bin/activate && pip install -r requirements.txt"
                                     }
                                  }
                             }
