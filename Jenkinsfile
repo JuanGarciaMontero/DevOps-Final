@@ -1,14 +1,16 @@
-DOCKER_IMAGE_NAME = "juanito/qualentum-reto-final"
+DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
-
+    options {
+        ansiColor('xterm')
+    }
     stages {
         stage('Pre') {
             parallel {
                 stage('Test') {
                     agent {
                         docker {
-                            image 'python:3.9.18-slim'
+                            image 'python:3.9-slim'
                         }
                     }
                     stages {
