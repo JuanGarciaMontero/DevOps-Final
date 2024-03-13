@@ -16,7 +16,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('devops-final') {
-                                        sh "pip install -r requirements.txt"
+                                        sh "pip install -r /home/juan/devops-final/requirements.txt"
                                     }
                                  }
                             }
