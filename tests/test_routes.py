@@ -8,6 +8,8 @@ class TestRoutes(TestCase):
         app = create_app("testing")  # Utiliza la configuración de prueba
         return app
 
+    def setUp(self):
+        db.create_all()
 
     def tearDown(self):
         db.session.remove()
