@@ -12,36 +12,17 @@ pipeline {
                         }
                     }
                     stages {
-                        stage('Instalar Dependencias') {
+                        stage('Instalar Dependencias + Linting + Test Covertura') {
                             steps {
                                 script {
                                     dir('./') {
                                         sh "python -m venv env"
-                                        sh ". env/bin/activate && pip install -r requirements.txt"
+                                        sh ". env/bin/activate && pip install -r requirements.txt && flake8 && pytest --cov=app tests/"
                                     }
                                  }
                             }
                         }
-                        stage('Linting') {
-                            steps {
-                                dir('./') {
-                                    script {
-                                        sh "flake8"
-                                    }
-                                }
-                            }
-                        }
-                        stage('Coverage') {
-                            steps {
-                                dir('./') {
-                                    script {
-                                        sh """
-                                        pytest --cov=app tests/
-                                        """
-                                    }
-                                }
-                            }
-                        }
+                    
                     }
                 }
                 stage('Imagen') {
