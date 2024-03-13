@@ -1,14 +1,11 @@
-def DOCKER_IMAGE_NAME = "juangarciamontero/app25"
-
+DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
-
     environment {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'postgres'
         POSTGRES_PASSWORD = 'postgres'
     }
-
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
@@ -24,7 +21,6 @@ pipeline {
                 }
             }
         }
-
         stage('Pre') {
             parallel {
                 stage('Test') {
@@ -33,16 +29,20 @@ pipeline {
                             image 'python:3.9-slim'
                         }
                     }
-                    steps {
-                        script {
-                            dir('./') {
-                                sh "python -m venv env"
-                                sh ". env/bin/activate && pip install -r requirements.txt && sh manage.sh && python run.py && pytest --cov=app tests/"
+                    stages {
+                        stage('Instalar Dependencias + Test Covertura') {
+                            steps {
+                                script {
+                                    dir('./') {
+                                        sh "python -m venv env"
+                                        sh ". env/bin/activate && pip install -r requirements.txt && sh manage.sh && python run.py && pytest --cov=app tests/"
+                                    }
+                                 }
                             }
                         }
+                    
                     }
                 }
-
                 stage('Imagen') {
                     agent any
                     steps {
@@ -63,8 +63,7 @@ pipeline {
                 }
             }
             environment {
-                DOCKER_USER = credentials('dockerhub-credentials').username
-                DOCKER_PASS = credentials('dockerhub-credentials').password
+                DOCKER = credentials('dockerhub-credentials')
                 VERSION = "1.0.1"
             }
             steps {
@@ -76,16 +75,6 @@ pipeline {
                     """
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            script {
-                sh "docker stop \${env.POSTGRES_CONTAINER_ID}"
-                sh "docker rm \${env.POSTGRES_CONTAINER_ID}"
-            }
-            echo "Fin del pipeline"
         }
     }
 }
