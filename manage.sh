@@ -8,5 +8,5 @@ SECRET_KEY=secret
 FLASK_COVERAGE=1
 
 
-pytest tests
+
 python manage.py
