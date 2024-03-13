@@ -1,87 +1,90 @@
+DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
-
     environment {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'postgres'
         POSTGRES_PASSWORD = 'postgres'
-        POSTGRES_CONTAINER_NAME = 'postgres-container'
-        APP_CONTAINER_NAME = 'app-container'
     }
-
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
-                    def postgresCommand = """
-                        docker run -d \
-                        -p 5432:5432 \
-                        -e POSTGRES_DB=${env.POSTGRES_DB} \
-                        -e POSTGRES_USER=${env.POSTGRES_USER} \
-                        -e POSTGRES_PASSWORD=${env.POSTGRES_PASSWORD} \
-                        --name ${env.POSTGRES_CONTAINER_NAME} \
-                        postgres:13
-                    """
+                    // Crear y ejecutar el contenedor de PostgreSQL
+                    def postgresContainerId = sh(script: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --name postgres-container postgres:latest", returnStdout: true).trim()
 
-                    def postgresContainerId = sh(script: postgresCommand, returnStdout: true).trim()
-
+                    // Esperar a que PostgreSQL esté listo (ajustar según tus necesidades)
                     sh 'sleep 20'
 
+                    // Almacenar el ID del contenedor de PostgreSQL para detenerlo más tarde
                     env.POSTGRES_CONTAINER_ID = postgresContainerId
                 }
             }
         }
-
-        stage('Iniciar contenedor con Python y app') {
-            steps {
-                script {
-                    def appCommand = """
-                        docker run -d -it \
-                        -p 5000:5000 \
-                        --name ${env.APP_CONTAINER_NAME} \
-                        juangarciamontero/app15:1.0.82
-                    """
-
-                    def appContainerId = sh(script: appCommand, returnStdout: true).trim()
-
-                    sh 'sleep 20'
-                    sh "docker logs ${appContainerId}"
-                    sh "docker exec ${appContainerId} python --version"
-
-                    // Obtiene la ruta actual dentro del contenedor
-                    def currentDir = sh(script: "docker exec ${appContainerId} pwd", returnStdout: true).trim()
-
-                    // Muestra la ruta actual en los logs de Jenkins
-                    echo "Ruta actual en el contenedor: ${currentDir}"
-
-                    sh "docker exec ${appContainerId} ls -l /"
-
-                    // Ejecuta manage.sh directamente
-                    sh "docker exec ${appContainerId} pytest --cov=app ./tests"
-                    sh "docker exec ${appContainerId} python run.py"
-
-                    def isAppContainerRunning = sh(script: "docker inspect -f '{{.State.Running}}' ${appContainerId}", returnStatus: true).toInteger()
-
-                    if (isAppContainerRunning == 0) {
-                        error "El contenedor de la aplicación NO está en ejecución."
+        stage('Pre') {
+            parallel {
+                stage('Test') {
+                    agent {
+                        docker {
+                            image 'python:3.9-slim'
+                        }
                     }
-
-                    env.APP_CONTAINER_ID = appContainerId
+                    stages {
+                        stage('Instalar Dependencias + Test Covertura') {
+                            steps {
+                                script {
+                                    dir('./') {
+                                        sh "python -m venv env"
+                                        sh ". env/bin/activate && pip install -r requirements.txt && sh manage.sh && python run.py && pytest --cov=app tests/"
+                                    }
+                                 }
+                            }
+                        }
+                    
+                    }
+                }
+                stage('Imagen') {
+                    agent any
+                    steps {
+                        dir('./') {
+                            script {
+                                sh "docker build --tag image -f Dockerfile .."
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
 
+        stage('Image') {
+            when {
+                anyOf {
+                    branch 'main'; branch 'QA'
+                }
+            }
+            environment {
+                DOCKER = credentials('dockerhub-credentials')
+                VERSION = "1.0.1"
+            }
+            steps {
+                script {
+                    sh """
+                    docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
+                    docker tag image \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    docker push \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    """
+                }
+            }
+        }
     post {
         always {
             script {
-                sh "docker stop ${env.APP_CONTAINER_ID}"
-                sh "docker rmi ${env.APP_CONTAINER_ID}"
 
                 sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
-                sh "docker rmi ${env.POSTGRES_CONTAINER_ID}"
+                sh "docker rm ${env.POSTGRES_CONTAINER_ID}"
             }
             echo "Fin del pipeline"
         }
     }
 }
+
