@@ -15,7 +15,7 @@ pipeline {
                         stage('Instalar Dependencias') {
                             steps {
                                 script {
-                                    dir('../') {
+                                    dir('/') {
                                         sh "python -m venv env"
                                         sh ". env/bin/activate"
                                         sh "pip install --user -r requirements.txt"
@@ -25,7 +25,7 @@ pipeline {
                         }
                         stage('Linting') {
                             steps {
-                                dir('../') {
+                                dir('/') {
                                     script {
                                         sh "flake8"
                                     }
@@ -34,7 +34,7 @@ pipeline {
                         }
                         stage('Coverage') {
                             steps {
-                                dir('../') {
+                                dir('/') {
                                     script {
                                         sh """
                                         pytest --cov=app tests/
@@ -48,7 +48,7 @@ pipeline {
                 stage('Imagen') {
                     agent any
                     steps {
-                        dir('./') {
+                        dir('/') {
                             script {
                                 sh "docker build --tag image -f Dockerfile .."
                             }
