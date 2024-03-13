@@ -16,8 +16,6 @@ pipeline {
                             steps {
                                 script {
                                     dir('/') {
-                                        sh "python -m venv env"
-                                        sh ". env/bin/activate"
                                         sh "pip install --user -r requirements.txt"
                                     }
                                  }
