@@ -57,7 +57,6 @@ pipeline {
                     sh "docker exec ${appContainerId} ls -l /"
 
                     // Ejecuta manage.sh directamente
-                    sh "docker exec ${appContainerId} pytest ./tests"
                     sh "docker exec ${appContainerId} pytest --cov=app ./tests"
                     sh "docker exec ${appContainerId} python run.py"
 
