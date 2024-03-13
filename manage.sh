@@ -5,6 +5,8 @@
 FLASK_ENV=development
 DATABASE_URI=postgresql://postgres:postgres@0.0.0.0:5432/ejer_final
 SECRET_KEY=secret
-FLASK_COVERAGE=2
+FLASK_COVERAGE=1
 
+
+pytest tests
 python manage.py
