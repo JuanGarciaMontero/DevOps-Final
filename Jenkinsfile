@@ -16,7 +16,7 @@ pipeline {
                             steps {
                                 script {
                                     dir('C:/Users/Acer/Desktop/Utiles/DevOps-Qualentum/DevOps-Final') {
-                                        sh "pip install --user -r requirements.txt"
+                                        sh "pip install -r requirements.txt"
                                     }
                                  }
                             }
