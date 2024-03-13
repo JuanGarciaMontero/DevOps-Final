@@ -76,5 +76,15 @@ pipeline {
                 }
             }
         }
+    post {
+        always {
+            script {
+
+                sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
+                sh "docker rm ${env.POSTGRES_CONTAINER_ID}"
+            }
+            echo "Fin del pipeline"
+        }
     }
 }
+
