@@ -15,7 +15,7 @@ pipeline {
                         stage('Instalar Dependencias') {
                             steps {
                                 script {
-                                    dir('/') {
+                                    dir('C:/Users/Acer/Desktop/Utiles/DevOps-Qualentum/DevOps-Final') {
                                         sh "pip install --user -r requirements.txt"
                                     }
                                  }
@@ -23,7 +23,7 @@ pipeline {
                         }
                         stage('Linting') {
                             steps {
-                                dir('/') {
+                                dir('C:/Users/Acer/Desktop/Utiles/DevOps-Qualentum/DevOps-Final') {
                                     script {
                                         sh "flake8"
                                     }
@@ -32,7 +32,7 @@ pipeline {
                         }
                         stage('Coverage') {
                             steps {
-                                dir('/') {
+                                dir('C:/Users/Acer/Desktop/Utiles/DevOps-Qualentum/DevOps-Final') {
                                     script {
                                         sh """
                                         pytest --cov=app tests/
@@ -46,7 +46,7 @@ pipeline {
                 stage('Imagen') {
                     agent any
                     steps {
-                        dir('/') {
+                        dir('C:/Users/Acer/Desktop/Utiles/DevOps-Qualentum/DevOps-Final') {
                             script {
                                 sh "docker build --tag image -f Dockerfile .."
                             }
