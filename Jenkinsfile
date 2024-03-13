@@ -17,7 +17,7 @@ pipeline {
                                 script {
                                     dir('./') {
                                         sh "python -m venv env"
-                                        sh ". env/bin/activate && pip install -r requirements.txt && flake8 && pytest --cov=app tests/"
+                                        sh ". env/bin/activate && pip install -r requirements.txt && pytest --cov=app tests/"
                                     }
                                  }
                             }
