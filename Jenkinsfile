@@ -1,12 +1,14 @@
-DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
+
     environment {
         POSTGRES_DB = 'ejer_final'
         POSTGRES_USER = 'postgres'
         POSTGRES_PASSWORD = 'postgres'
     }
+
     stages {
+
         stage('Iniciar contenedor de PostgreSQL') {
             steps {
                 script {
@@ -21,70 +23,43 @@ pipeline {
                 }
             }
         }
-        stage('Pre') {
-            parallel {
-                stage('Test') {
-                    agent {
-                        docker {
-                            image 'python:3.9-slim'
-                        }
-                    }
-                    stages {
-                        stage('Instalar Dependencias + Test Covertura') {
-                            steps {
-                                script {
-                                    dir('./') {
-                                        sh "python -m venv env"
-                                        sh ". env/bin/activate && pip install -r requirements.txt && pytest --cov=app tests/"
-                                    }
-                                 }
-                            }
-                        }
-                    
-                    }
-                }
-                stage('Imagen') {
-                    agent any
-                    steps {
-                        dir('./') {
-                            script {
-                                sh "docker build --tag image -f Dockerfile .."
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
-        stage('Image') {
-            when {
-                anyOf {
-                    branch 'main'; branch 'QA'
-                }
-            }
-            environment {
-                DOCKER = credentials('dockerhub-credentials')
-                VERSION = "1.0.1"
-            }
+        stage('Iniciar contenedor con Python y app') {
             steps {
                 script {
-                    sh """
-                    docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
-                    docker tag image \${DOCKER_IMAGE_NAME}:\${VERSION}
-                    docker push \${DOCKER_IMAGE_NAME}:\${VERSION}
-                    """
+                    // Crear y ejecutar el contenedor con la aplicación Python
+                    def appContainerId = sh(script: "docker run -d -it -p 5000:5000 --name app-container --link postgres-container juangarciamontero/app15:1.0.1", returnStdout: true).trim()
+
+                    // Esperar a que la aplicación esté lista (ajustar según tus necesidades)
+                    sh 'sleep 10'
+
+                    // Ejecutar comandos dentro del contenedor de la aplicación
+                    script {
+                        docker.image("${appContainerId}").inside {
+                            sh "python --version"
+                            sh "pytest ./tests"
+                            sh "pytest --cov=app ./tests"
+                        }
+                    }
+
+                    // Almacenar el ID del contenedor de la aplicación para detenerlo más tarde
+                    env.APP_CONTAINER_ID = appContainerId
                 }
             }
         }
+    }
+
     post {
         always {
+            // Detener y eliminar los contenedores después de la ejecución del pipeline
             script {
+                sh "docker stop ${env.APP_CONTAINER_ID}"
+                sh "docker rmi ${env.APP_CONTAINER_ID}"
 
                 sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
-                sh "docker rm ${env.POSTGRES_CONTAINER_ID}"
+                sh "docker rmi ${env.POSTGRES_CONTAINER_ID}"
             }
             echo "Fin del pipeline"
         }
     }
 }
-
