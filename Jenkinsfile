@@ -35,7 +35,7 @@ pipeline {
                                 script {
                                     dir('./') {
                                         sh "python -m venv env"
-                                        sh ". env/bin/activate && pip install -r requirements.txt && python manage.py && python run.py && pytest --cov=app tests/"
+                                        sh ". env/bin/activate && pip install -r requirements.txt && sh manage.sh && python run.py && pytest --cov=app tests/"
                                     }
                                  }
                             }
