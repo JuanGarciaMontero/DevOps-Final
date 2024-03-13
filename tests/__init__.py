@@ -20,7 +20,7 @@ def create_app(config_name):
     db.init_app(app)
 
     # Import blueprints/routes
-    from routes import data_routes
+    from app.routes import data_routes
 
     # Register blueprints
     app.register_blueprint(data_routes)
