@@ -8,8 +8,6 @@ class TestRoutes(TestCase):
         app = create_app("testing")  # Utiliza la configuración de prueba
         return app
 
-    def setUp(self):
-        db.create_all()
 
     def tearDown(self):
         db.session.remove()
@@ -21,7 +19,6 @@ class TestRoutes(TestCase):
         data = Data.query.filter_by(name="TestName").first()
         self.assertIsNotNone(data)
 
-    # Agrega más pruebas según sea necesario
 
 if __name__ == "__main__":
     pytest.main()
