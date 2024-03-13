@@ -12,7 +12,7 @@ pipeline {
                         }
                     }
                     stages {
-                        stage('Instalar Dependencias + Linting + Test Covertura') {
+                        stage('Instalar Dependencias + Test Covertura') {
                             steps {
                                 script {
                                     dir('./') {
