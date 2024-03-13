@@ -16,6 +16,8 @@ pipeline {
                             steps {
                                 script {
                                     dir('devops-final') {
+                                        sh "python -m venv env"
+                                        sh ". env/bin/activate"
                                         sh "pip install -r requirements.txt"
                                     }
                                  }
