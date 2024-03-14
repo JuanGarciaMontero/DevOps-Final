@@ -1,13 +1,10 @@
 FROM python:3.8
 
-WORKDIR /
+WORKDIR /app
 
-COPY . /
+COPY requirements.txt /app
+RUN pip install -r requirements.txt
 
-RUN pip install virtualenv && \
-    python -m venv venv && \
-    . venv/bin/activate && \
-    pip install -r requirements.txt
-
+COPY . /app
 
 CMD ["python", "run.py"]
