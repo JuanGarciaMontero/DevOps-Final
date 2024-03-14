@@ -1,10 +1,10 @@
 FROM python:3.8
 
-WORKDIR /app
+WORKDIR /
 
 
 RUN pip install -r requirements.txt
 
-COPY . /app
+COPY . /
 
 CMD ["python", "run.py"]
