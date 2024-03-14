@@ -1,6 +1,11 @@
 DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
+    environment {
+        POSTGRES_DB = 'ejer_final'
+        POSTGRES_USER = 'postgres'
+        POSTGRES_PASSWORD = 'postgres'
+    }
 
     stages {
         stage('Iniciar contenedor de PostgreSQL') {
@@ -31,7 +36,7 @@ pipeline {
                                 sh "python -m venv env"
                                 sh ". env/bin/activate && pip install -r requirements.txt && pytest --cov=app tests/"
                             }
-                         }
+                        }
                     }
                 }
                 stage('Imagen') {
@@ -67,6 +72,16 @@ pipeline {
                     """
                 }
             }
+        }
+    }
+    post {
+        always {
+            // Detener y eliminar los contenedores después de la ejecución del pipeline
+            script {
+                sh "docker stop ${env.POSTGRES_CONTAINER_ID}"
+                sh "docker rm ${env.POSTGRES_CONTAINER_ID}"
+            }
+            echo "Fin del pipeline"
         }
     }
 }
