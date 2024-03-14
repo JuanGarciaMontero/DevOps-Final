@@ -4,7 +4,7 @@ WORKDIR /
 
 COPY . /
 
-RUN /bin/bash -c "pwd"
+RUN /bin/bash -c "ls"
 
 COPY requirements.txt /app/
 
