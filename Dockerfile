@@ -2,9 +2,13 @@ FROM python:3.8
 
 WORKDIR /
 
-
-RUN pip install -r requirements.txt
-
 COPY . /
+
+RUN pip install virtualenv && \
+    python -m venv venv
+
+RUN /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt"
+
+EXPOSE 5000
 
 CMD ["python", "run.py"]
