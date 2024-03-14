@@ -9,5 +9,3 @@ RUN pip install virtualenv && \
 RUN /bin/bash -c "chmod +x run.py && source venv/bin/activate && pip install -r requirements.txt"
 
 EXPOSE 5000
-
-CMD ["python", "run.py"]
