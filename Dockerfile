@@ -2,7 +2,7 @@ FROM python:3.8
 
 WORKDIR /app
 
-RUN /bin/bash -c "ls"
+RUN /bin/bash -c "pwd"
 
 COPY requirements.txt /app/
 
