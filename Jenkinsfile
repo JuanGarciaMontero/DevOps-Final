@@ -30,7 +30,6 @@ pipeline {
                     steps {
                         dir('./') {
                             script {
-                                sh "ls"
                                 sh "docker build --tag image -f Dockerfile .."
                             }
                         }
