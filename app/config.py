@@ -7,7 +7,6 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "secret")
 
     # Database configuration
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Add other configuration variables as needed
@@ -15,22 +14,26 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'development.db')
 
 
 class ProductionConfig(Config):
     DEBUG = False
     # Add other production configurations here
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@127.0.0.1:5432/production_db'
+
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@127.0.0.1:5432/ejer_final'
-    # O la configuración adecuada para tu base de datos de prueba
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
+    # Use SQLite for testing
+
 
 class CoverageConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@0.0.0.0:5432/ejer_final'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test_coverage.db')
     COVERAGE = True
-    COVERAGE_DIR = os.path.join(basedir, 'coverage')  
+    COVERAGE_DIR = os.path.join(basedir, 'coverage')
 
 # Dictionary to map environment names to configuration classes
 config_dict = {
