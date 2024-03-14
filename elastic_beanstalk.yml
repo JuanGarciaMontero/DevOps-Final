@@ -1,37 +1,145 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Resources:
-  MyElasticBeanstalkApplication:
-    Type: 'AWS::ElasticBeanstalk::Application'
-    Properties:
-      ApplicationName: MyElasticBeanstalkApp
 
-  MyElasticBeanstalkEnvironment:
-    Type: 'AWS::ElasticBeanstalk::Environment'
+Parameters:
+  VpcCidr:
+    Type: String
+    Default: "10.0.0.0/16"
+    Description: CIDR block for the VPC
+  SubnetCidr:
+    Type: String
+    Default: "10.0.0.0/24"
+    Description: CIDR block for the subnets
+  KeyName:
+    Type: String
+    Default: "my-keypair"
+    Description: Name of the EC2 KeyPair to enable SSH access
+  InstanceType:
+    Type: String
+    Default: "t2.micro"
+    Description: EC2 instance type for Elastic Beanstalk
+  ApplicationName:
+    Type: String
+    Default: "MyElasticBeanstalkApp"
+    Description: Name of the Elastic Beanstalk application
+  EnvironmentName:
+    Type: String
+    Default: "MyElasticBeanstalkEnv"
+    Description: Name of the Elastic Beanstalk environment
+  PostgresUser:
+    Type: String
+    Default: "postgres"
+    Description: PostgreSQL database user
+  PostgresPassword:
+    Type: String
+    NoEcho: true
+    Description: PostgreSQL database password
+  PostgresDB:
+    Type: String
+    Default: "ejer_final"
+    Description: PostgreSQL database name
+  DockerImage:
+    Type: String
+    Default: "juangarciamontero/app25"
+    Description: Docker image to use for the application
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
     Properties:
-      ApplicationName: !Ref MyElasticBeanstalkApplication
-      EnvironmentName: MyElasticBeanstalkEnv
-      SolutionStackName: aws_beanstalk_solution_stack
+      CidrBlock: !Ref VpcCidr
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref SubnetCidr
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  Route:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref InternetGateway
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet
+      RouteTableId: !Ref RouteTable
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Elastic Beanstalk
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  MyApplication:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: !Ref ApplicationName
+
+  MyEnvironment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      EnvironmentName: !Ref EnvironmentName
+      ApplicationName: !Ref MyApplication
+      SolutionStackName: "64bit Amazon Linux 2 v5.1.1 running Python 3.7"
+      OptionSettings:
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: EC2KeyName
+          Value: !Ref KeyName
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: InstanceType
+          Value: !Ref InstanceType
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: EnvironmentType
+          Value: SingleInstance
       Tier:
         Type: Standard
-      OptionSettings:
-        - Namespace: aws:elasticbeanstalk:application:environment
-          OptionName: PARAM1
-          Value: 'VALUE1'
-        - Namespace: aws:elasticbeanstalk:application:environment
-          OptionName: PARAM2
-          Value: 'VALUE2'
-        # Agrega más configuraciones según sea necesario
-      VersionLabel: GitHub
+        Name: WebServer
+      DependsOn: SubnetRouteTableAssociation
 
-  MyElasticBeanstalkSourceBundle:
-    Type: 'AWS::S3::Bucket'
+  FlaskAndPostgresProvisioning:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      BucketName: MyElasticBeanstalkSourceBucket
+      TemplateURL: "https://s3.amazonaws.com/my-bucket/flask_postgres_provisioning.yaml"
+      Parameters:
+        KeyName: !Ref KeyName
+        SubnetId: !Ref Subnet
+        PostgresUser: !Ref PostgresUser
+        PostgresPassword: !Ref PostgresPassword
+        PostgresDB: !Ref PostgresDB
 
-  MyElasticBeanstalkSource:
-    Type: 'AWS::ElasticBeanstalk::ApplicationVersion'
+  DockerImageProvisioning:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      ApplicationName: !Ref MyElasticBeanstalkApplication
-      SourceBundle:
-        S3Bucket: !Ref MyElasticBeanstalkSourceBucket
-        S3Key: /path/to/your/application/source.zip
+      TemplateURL: "https://s3.amazonaws.com/my-bucket/docker_image_provisioning.yaml"
+      Parameters:
+        DockerImage: !Ref DockerImage
+
+Outputs:
+  ElasticBeanstalkURL:
+    Value: !Sub "http://${MyEnvironment.EndpointURL}"
+    Description: URL of the Elastic Beanstalk environment
