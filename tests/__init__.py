@@ -1,28 +1,22 @@
-import os
+# app/__init__.py
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from app.config import config_dict
 
 db = SQLAlchemy()
 
-
 def create_app(config_name):
     app = Flask(__name__)
-
-    if config_name == 'testing':
-        app.config.from_object(config_dict['testing'])
+    
+    if config_name == "testing":
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
     else:
-        app.config.from_object(config_dict[config_name])
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///your_database_file.db"
+    
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
-    # Initialize the database
     db.init_app(app)
 
-    # Import blueprints/routes
-    from app.routes import data_routes
-
-    # Register blueprints
-    app.register_blueprint(data_routes)
+    # Registro de blueprints, configuraciones adicionales, etc.
 
     return app
