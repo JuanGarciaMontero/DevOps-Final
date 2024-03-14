@@ -28,7 +28,7 @@ pipeline {
                 stage('Imagen') {
                     agent any
                     steps {
-                        dir('app') {
+                        dir('./') {
                             script {
                                 sh "ls"
                                 sh "docker build --tag image -f Dockerfile .."
