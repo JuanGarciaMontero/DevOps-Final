@@ -1,13 +1,11 @@
 FROM python:3.8
 
-WORKDIR /
+WORKDIR /app
 
-COPY . /
-
-COPY requirements.txt /
+COPY requirements.txt /app
 
 RUN pip install -r requirements.txt
 
-EXPOSE 5000
+COPY . /app
 
 CMD ["python", "run.py"]
