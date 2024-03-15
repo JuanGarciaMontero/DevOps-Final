@@ -38,11 +38,6 @@ pipeline {
             }
         }
         stage('Image') {
-            when {
-                anyOf {
-                    branch 'QA'; branch 'main';
-                }
-            }
             environment {
                 DOCKER = credentials('dockerhub-credentials')
                 VERSION = "1.0.1"
