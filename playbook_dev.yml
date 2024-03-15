@@ -13,7 +13,7 @@
         name: nginx
         state: present
 
-    - name: Instalar software python y  pip
+    - name: Instalar software python y pip
       apt:
         name: "{{ item }}"
         update_cache: yes
@@ -23,16 +23,28 @@
         - python3-pip
 
     - name: Instalar virtualenv global
-      ansible.builtin.pip:
+      pip:
         name: virtualenv
+        executable: pip3
 
     - name: Instalar requirements de python en su entorno virtual
-      ansible.builtin.pip:
-        name: flask, sqlalchemy, psycopg2-binary, flask-sqlalchemy, flask-Testing, pytest==7.4.2, coverage, flake8, gunicorn, pandas
+      pip:
+        name: "{{ item }}"
         virtualenv: /code/mlvenv
+      loop:
+        - flask
+        - sqlalchemy
+        - psycopg2-binary
+        - flask-sqlalchemy
+        - flask-Testing
+        - pytest==7.4.2
+        - coverage
+        - flake8
+        - gunicorn
+        - pandas
 
     - name: Activar entorno virtual
-      shell:
+      ansible.builtin.shell:
         cmd: source /code/mlvenv/bin/activate
         executable: /bin/bash
       environment:
@@ -40,18 +52,19 @@
         PATH: "{{ '/code/mlvenv/bin' }}:{{ ansible_env.PATH }}"
 
 
-- name: Instalación y Configuración  Base de datos PostgreSQL
+- name: Instalación y Configuración Base de datos PostgreSQL
   hosts: db
   gather_facts: yes
   become: true
   tasks:
     - name: Instalar Docker (si no está instalado)
-      ansible.builtin.command: "apt-get install -y docker.io"
-      become: true
+      apt:
+        name: docker.io
+        state: present
       ignore_errors: yes
 
     - name: Ejecutar contenedor de PostgreSQL
-      command: "docker run -d -p 5432:5432 -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --name postgres-container postgres:13"
+      command: "docker run -d -p 5432:5432 -e POSTGRES_DB={{ POSTGRES_DB }} -e POSTGRES_USER={{ POSTGRES_USER }} -e POSTGRES_PASSWORD={{ POSTGRES_PASSWORD }} --name postgres-container postgres:13"
 
 
 - name: Tareas comunes
@@ -60,7 +73,7 @@
   become: true
   tasks:
     - name: Crear archivos de aprovisionamiento
-      file:
+      ansible.builtin.file:
         state: touch
         path: /etc/provisioned
         modification_time: preserve
@@ -73,8 +86,7 @@
         line: "last provision: {{ ansible_date_time.iso8601 }}"
 
   handlers:
-       - name: Reload PostgreSQL
-         systemd:
-           name: postgresql
-           state: restarted
-         become: yes
+    - name: Reload PostgreSQL
+      systemd:
+        name: postgresql
+        state: restarted

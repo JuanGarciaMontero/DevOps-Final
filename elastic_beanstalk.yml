@@ -119,12 +119,11 @@ Resources:
       Tier:
         Type: Standard
         Name: WebServer
-      DependsOn: SubnetRouteTableAssociation
 
   FlaskAndPostgresProvisioning:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: "https://s3.amazonaws.com/my-bucket/flask_postgres_provisioning.yaml"
+      TemplateURL: "https://s3.amazonaws.com/elasticbeanstalk-us-east-1-071538442084/flask_postgres_provisioning.yaml"
       Parameters:
         KeyName: !Ref KeyName
         SubnetId: !Ref Subnet
@@ -135,7 +134,7 @@ Resources:
   DockerImageProvisioning:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: "https://s3.amazonaws.com/my-bucket/docker_image_provisioning.yaml"
+      TemplateURL: "https://s3.amazonaws.com/elasticbeanstalk-us-east-1-071538442084/docker_image_provisioning.yaml"
       Parameters:
         DockerImage: !Ref DockerImage
 
