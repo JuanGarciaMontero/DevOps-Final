@@ -40,7 +40,7 @@ pipeline {
         stage('Image') {
             when {
                 anyOf {
-                    branch 'master'; branch 'QA'
+                    branch 'main'; branch 'QA'
                 }
             }
             environment {
