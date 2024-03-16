@@ -1,6 +1,0 @@
-{
-    "yaml.schemas": {
-        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/role-arg-spec.json": "file:///c%3A/Users/Acer/Desktop/DevOps-Qualentum/DevOps-Final/main.yml"
-    },
-    "ansible.python.interpreterPath": "c:\\Users\\Acer\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
-}
