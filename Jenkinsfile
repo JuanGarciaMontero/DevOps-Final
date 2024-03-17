@@ -38,21 +38,22 @@ pipeline {
             }
         }
         stage('Image') {
+            when {
+                anyOf {
+                    branch 'QA'; branch 'main';
+                }
+            }
             environment {
-                DOCKER_USER = credentials('dockerhub-username')
-                DOCKER_PASS = credentials('dockerhub-password')
-                DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-                DOCKER_IMAGE_NAME = "juangarciamontero/app25"
+                DOCKER = credentials('dockerhub-credentials')
                 VERSION = "1.0.1"
             }
             steps {
                 script {
-                    docker.withRegistry(DOCKER_REGISTRY, DOCKER_USER, DOCKER_PASS) {
-                        sh """
-                        docker tag image ${DOCKER_IMAGE_NAME}:${VERSION}
-                        docker push ${DOCKER_IMAGE_NAME}:${VERSION}
-                        """
-                    }
+                    sh """
+                    docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
+                    docker tag image \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    docker push \${DOCKER_IMAGE_NAME}:\${VERSION}
+                    """
                 }
             }
         }
