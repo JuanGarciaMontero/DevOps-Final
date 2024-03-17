@@ -39,16 +39,18 @@ pipeline {
         }
         stage('Image') {
             environment {
-                DOCKER = credentials('dockerhub-credentials')
+                DOCKER_REGISTRY = 'https://index.docker.io/v1/'
+                DOCKER_IMAGE_NAME = "juangarciamontero/app25"
                 VERSION = "1.0.1"
             }
             steps {
-                script {
-                    sh """
-                    docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
-                    docker tag image \${DOCKER_IMAGE_NAME}:\${VERSION}
-                    docker push \${DOCKER_IMAGE_NAME}:\${VERSION}
-                    """
+            script {
+                    docker.withRegistry(DOCKER_REGISTRY, 'dockerhub-credentials') {
+                        sh """
+                        docker tag image ${DOCKER_IMAGE_NAME}:${VERSION}
+                        docker push ${DOCKER_IMAGE_NAME}:${VERSION}
+                        """
+                    }
                 }
             }
         }
