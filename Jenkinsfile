@@ -1,4 +1,3 @@
-DOCKER_IMAGE_NAME = "juangarciamontero/app25"
 pipeline {
     agent any
 
@@ -12,43 +11,45 @@ pipeline {
                         }
                     }
                     stages {
-                        stage('Instalar Dependencias + Test Covertura') {
+                        stage('Install Dependencies + Test Coverage') {
                             steps {
                                 script {
                                     dir('./') {
                                         sh "python -m venv env"
                                         sh ". env/bin/activate && pip install -r requirements.txt && pytest --cov=app tests/"
                                     }
-                                 }
+                                }
                             }
                         }
-                    
                     }
                 }
-                stage('Imagen') {
+                stage('Build Image') {
                     agent any
                     steps {
                         dir('./') {
                             script {
-                                sh "docker build --tag image -f Dockerfile .."
+                                sh "docker build --tag juangarciamontero/app25:latest -f Dockerfile .."
                             }
                         }
                     }
                 }
             }
         }
-        stage('Image') {
+        stage('Push Image') {
             environment {
-                DOCKER = credentials('dockerhub-credentials')
+                DOCKER_CREDS = credentials('dockerhub-credentials')
+                DOCKER_REGISTRY = 'https://index.docker.io/v1/'
+                DOCKER_IMAGE_NAME = "juangarciamontero/app25"
                 VERSION = "1.0.1"
             }
             steps {
                 script {
-                    sh """
-                    docker login -u \${DOCKER_USER} -p \${DOCKER_PASS}
-                    docker tag image \${DOCKER_IMAGE_NAME}:\${VERSION}
-                    docker push \${DOCKER_IMAGE_NAME}:\${VERSION}
-                    """
+                    docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDS) {
+                        sh """
+                        docker tag juangarciamontero/app25:latest ${DOCKER_IMAGE_NAME}:${VERSION}
+                        docker push ${DOCKER_IMAGE_NAME}:${VERSION}
+                        """
+                    }
                 }
             }
         }
