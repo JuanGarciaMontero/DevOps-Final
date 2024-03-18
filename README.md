@@ -225,17 +225,17 @@
     Nos situamos en la rama Dev(Desarrollo). 
     Si todo vá bien clonamos con la rama main(producción).
 
-	1- Arrancamos una imagen docker posgresql: docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -d postgres
+	1- Arrancamos una imagen docker posgresql: docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e 		POSTGRES_PASSWORD=postgres -d postgres
 	(de esta forma nos aislamos del sistema operativo local)
 	
 	 Ó
 	
-    3- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
-      Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
-      Crear base de datos "ejer_final"
+    	2- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
+     	 Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
+      	Crear base de datos "ejer_final"
 
-    app/config.py -> configurar para conectar a postgreSQL. 
-       SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:juan@127.0.0.1:5432/ejer_final'
+   	 app/config.py -> configurar para conectar a postgreSQL. 
+      	 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:juan@127.0.0.1:5432/ejer_final'
 	(de esta forma no nos aislamos del sistema operativo local, ya que la instalación de postresql se
 	 realizado en un sistema operativo Windows).
 
