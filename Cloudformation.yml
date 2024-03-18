@@ -117,3 +117,4 @@ Outputs:
       Name: !Sub "${AWS::StackName}-AccessSG"
   InstanceIpe:
     Value: !GetAtt InstanceA.PublicIp
+    
