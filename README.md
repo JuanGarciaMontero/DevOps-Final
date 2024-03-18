@@ -217,7 +217,7 @@
 	** La rama "Ops" tendrá el código de la infractructura como código, será un entorno preproduccion. Se pretende elaborar
 	   una plantilla en Cloudformation.yml para que elabore un entorno con la imagen de una base de datos postgresql y
 	   recoja del repositorio Docker Hub o S3 de AWS la imagen docker de nuestra aplicación. La construcción del archivo
-	   Cloudformation.yml tambien elaborará el servicio de Elastic-Beanstalk de AWS. Si todo vá bien la saida de la
+	   Cloudformation.yml tambien elaborará el servicio de Elastic-Beanstalk de AWS. Si todo vá bien la salida de la
 	   plantilla Cloudformation.yml nos dará la url con la aplicación funcionando.
 	   
 ## PRUEBAS EN LOCAL DE LA APP
