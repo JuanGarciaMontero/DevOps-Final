@@ -37,13 +37,13 @@
 
         Despliegue en la Nube:
 
-          La aplicación se despliega utilizando Cloudformation con grupos de seguridad, pares 
-          de claves y balanceadores de carga.
+          La aplicación se despliega utilizando el ciclo de despliegue continuo (CD), en el que
+          se utiliza Elastic-Beanstilk de AWS.
 
         Escalabilidad y Tolerancia a Fallos:
 
           La aplicación es escalable horizontalmente con instancias de EC2 adicionales para 
-          garantizar disponibilidad. Para automatizar el escalado se puede implementar Elastic Beanstalk.
+          garantizar disponibilidad. Para automatizar el escalado se implementa Elastic Beanstalk.
 
       3. Descripción del Ciclo de Vida
 
@@ -90,87 +90,35 @@
   ![imagen Ciclo de Vida](https://i.ytimg.com/vi/x2IN28DKK3o/sddefault.jpg)
            
 
-## Bloques de desarrollo:
-
-# 1- Creación de un entorno local de desarrollo.
-
-  ![imagen Piramide Tests](https://dc722jrlp2zu8.cloudfront.net/media/uploads/2022/11/18/untitled.png)
-
-    - Clonar a un repositorio git la aplicación ejemplo.
-    - Realizar test unitarios a nuevas características incorporadas en nuestra aplicación.
-    - Documentación de: arquitectura de software, como se ejecutan los test,
-      como se ejecutan localmente el entorno de pruebas y el modelo de ramas GIT.
-    - Test de cobertura de al menos el 80% de las líneas de código
-
-# 2- Creación de pipelen de CI. Jenkins.
-
-  ![imagen Jenkins|50](https://miro.medium.com/v2/resize:fit:951/1*H9jHoRaRnJ0KnqmPs6xeUA.jpeg )
-
-    - Clonado de código fuente
-    - Ejecución de test
-    - Creación imagen Docker para ejecutar software en un contenedor
-    - Subida el resultadoa algún Registro (privado,EC2, Docker Hub, ...) 
-      siempre que sea la rama Dev o main.
-      - Documentar que hace Jenkins y Git, y en cada push se realice un job en Jenkins.
-
-# 3- Infraestructura como código
-
-  ![imagen AWS CludFormation](https://www.inbest.cloud/hs-fs/hubfs/Alondra/que%20es%20aws%20cloud%20formation.jpg)
-
-    - El código generado debe estar en un repositorio de Git, que puede ser el mismo 
-    que el de la aplicación o no (está decisión debe ser justificada). Utilizamos el mismo 
-    repositorio Git ya que en la rama Ops tendremos la infraestructura tanto para desarrollo Dev
-    como para produccion. Se diferencian en que en desarrollo utilizamos una imagen de posgresql 
-    y en produccion (main) instalamos postgresql.
-    - Se debe acompañar al código de IaC de instrucciones precisas sobre cómo conseguimos 
-    ejecutar la creación/actualización de la infraestructura, incluyendo si es necesario 
-    qué valores o variables de entorno debemos tener en cuenta.
-    - Tampoco debemos olvidar que puede haber más de un entorno de despliegue y que nos podría 
-    interesar regenerar la misma infraestructura, con un diferente set de recursos, en otro VPC.
-
-# 4- Despliegue
-
-  ![imagen Ansible Architecture](https://www.exevi.com/wp-content/uploads/2021/04/ansible-automation-engine-768x450.png)
-
-    El objetivo es el de generar un playbook de Ansible que sepa desplegar una nueva versión 
-    de una imagen Docker en la infraestructura que nosotros mismos hemos declarado y generado.
-	  El único input que deberíamos necesitar es la versión por desplegar o una URL al artefacto/imagen.
-	  Ten en cuenta aquellas estrategias de despliegue que permitan minimizar el tiempo de 
-    indisponibilidad, así como la posibilidad de que el proceso falle y haya que volver atrás.
-
 ## Implementación de la Solución
 
 # 1- CREACIÓN DE UN ENTORNO LOCAL DE DESARROLLO:
 
-    IDE elegido es Visual Studio Code por ser muy versatil al poder utilizar multiples 
-    lenguajes y tener plugins adaptados a ellos, se puede utilizar cualquier otro IDE del mercado.
-    Necesidad de tener instalado Python en version igual o superior a la 3, de forma global 
-    en la máquina local, ya que es el lenguaje utilizado en la aplicación sobre la que tenemos 
-    que desarrollar la solución. 
+  IDE elegido es Visual Studio Code por ser muy versatil al poder utilizar multiples 
+  lenguajes y tener plugins adaptados a ellos, se puede utilizar cualquier otro IDE del mercado.
+  Necesidad de tener instalado Python en version igual o superior a la 3, de forma global 
+  en la máquina local, ya que es el lenguaje utilizado en la aplicación sobre la que tenemos 
+  que desarrollar la solución. 
+
 	Una vez elegido la ruta y nombre de la carpeta que llevará nuestro proyecto " DevOps-Final",
 	lo primero es clonar el repositorio público creado en 
-    github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto. 
-    A continuación copiamos los archivos y carpetas de la aplicación en nuestro proyecto.
-    A continuación tenemos que aislar nuestro proyecto del resto del equipo, para poder utilizar
-    la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos 
-    un entorno virtual y cargamos las dependencias en su versión necesarias para nuestro proyecto. 
-     a aplicación en local podemos arrancarla con "python run.py".
+  github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto. 
+  A continuación copiamos los archivos y carpetas de la aplicación en nuestro proyecto.
+  Despues tenemos que aislar nuestro proyecto del resto del equipo, para poder utilizar
+  la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos 
+  un entorno virtual y cargamos las dependencias en su versión necesarias para nuestro proyecto. 
+  a aplicación en local podemos arrancarla con "python run.py".
 
-    Para crear un entorno local de desarrollo, sigue estos pasos:
+  Para crear un entorno local de desarrollo, sigue estos pasos:
 
-      1. Configuración del Entorno:
-
-         - python -m venv env
-         - source env/Scripts/activate
-
-      2. Instalación de Dependencias:
-
-         - Instala las dependencias del proyecto: pip install -r requirements.txt.
-
-      3. Ejecución Local:
-
-         - Ejecuta la aplicación localmente: python run.py.
-         - Accede a la aplicación en tu navegador: http://localhost:5000/data
+  1. Configuración del Entorno:
+    - python -m venv env
+    - source env/Scripts/activate
+  2. Instalación de Dependencias:
+    - Instala las dependencias del proyecto: pip install -r requirements.txt.
+  3. Ejecución Local:
+    - Ejecuta la aplicación localmente: python run.py.
+    - Accede a la aplicación en tu navegador: http://localhost:5000/data
     
 # Crear Repositorio en GitHub con usuario JuanGarciaMontero con nombre "DevOps-Final"
 
@@ -195,51 +143,43 @@
 	  
  Explicación de las Ramas:
  
-	** La rama "main" es la rama de producción que llevará el código de la aplicación preparado para producción
-	   y los archivos que prepara la infrastructura como código y su despliegue en AWS(Cloudformation.yml)(Nube pública elegida).
+	** La rama "main" es la rama de producción que llevará el código de la aplicación preparado para
+    producción y los archivos que prepara la infrastructura como código y su despliegue en AWS(Cloudformation.yml)(Nube pública elegida). El despliegue automatico o CD se realiza mediante
+    el archivo Jenkinsfile de la rama main.
 	   
 	** La rama "Dev" tendrá el código de la aplicación en Flask además el archivo Docker (Dockerfile),
-	   que permitiran a los desarrolladores poder evolucionar la aplicación contra la imagen docker de una
-	   base de datos postgresql. En esta fase no se permite que falle la aplicación contra la base de datos. Se consigue
-	   pasando CI action de Github a esta rama.
+	  que permitiran a los desarrolladores poder evolucionar la aplicación contra la imagen docker de una
+	  base de datos postgresql. En esta fase no se permite que falle la aplicación contra la base de datos. Se consigue pasando CI action de Github a esta rama.
 	   
-	** La rama "QA" tendrá el código de la aplicación además de las modificaciones en el código para pasar test
-	   unitarios y de covertura. Los test se pueden pasar localmente (Dockerfile1 y Docker-compose.yml), pero se pretende
-	   que el código pase a una canalizacion o pipeline de integración continua. Esto lo conseguimos a través de CI action de Github (no permitiendo errores al subir código en esta rama, ya que debe pasar 80% de test de covertura), o
-	   con Jenkins. Tenemos elavorado un archivo Jenkinsfile.yml que recoge Jenkins cuando hay cambios en el repositorio
-	   Github(configuración de webhook en Github y activar la recogidas de esos hooks y a que rama afecta "QA"), arranca
-	   la canalización: primero vá elaborando un contenedor docker de la aplicación actual, y por la otra rama
-	   levanta una imagen docker con los archivos de la aplicación y pasa los test de covertura; estos deben tener
-	   una covertura mayor al 80% sino dará error el pipeline. Si todo va bien y pasa el 80% de los test de covertura,
-	   y estamos en la rama "main" o "QA"; continua con el push de la imagen docker generada a un repositorio, como 
-	   Docker Hub o S3 de AWS.
+	** La rama "QA" tendrá el código de la aplicación además de las modificaciones en el código para 
+    pasar test unitarios y de covertura. Los test se pueden pasar localmente (Dockerfile1 y Docker-compose.yml), pero se pretende que el código pase a una canalizacion o pipeline de integración continua. Esto lo conseguimos a través de CI action de Github (no permitiendo errores al subir código en esta rama, ya que debe pasar 80% de test de covertura), o on Jenkins. Tenemos elavorado un archivo Jenkinsfile.yml que recoge Jenkins cuando hay cambios en el repositorio Github(configuración de webhook en Github y activar la recogidas de esos hooks y a que rama afecta "QA"), arranca la canalización: primero vá elaborando un contenedor docker de la aplicación actual, y por la otra rama levanta una imagen docker con los archivos de la aplicación y pasa los test de covertura; estos deben teneruna covertura mayor al 80% sino dará error el pipeline. Si todo va bien y pasa el 80% de los test de covertura,
+	  y estamos en la rama "main" o "QA"; continua con el push de la imagen docker generada a un repositorio, como Docker Hub o S3 de AWS.
 	   
-	** La rama "Ops" tendrá el código de la infractructura como código, será un entorno preproduccion. Se pretende elaborar
-	   una plantilla en Cloudformation.yml para que elabore un entorno con la imagen de una base de datos postgresql y
-	   recoja del repositorio Docker Hub o S3 de AWS la imagen docker de nuestra aplicación. La construcción del archivo
-	   Cloudformation.yml tambien elaborará el servicio de Elastic-Beanstalk de AWS. Si todo vá bien la saida de la
-	   plantilla Cloudformation.yml nos dará la url con la aplicación funcionando.
+	** La rama "Ops" tendrá el código de la infractructura como código, será un entorno preproduccion.
+    Se pretende elaborar una plantilla en Cloudformation.yml para que elabore un entorno con la imagen de una base de datos postgresql y recoja del repositorio Docker Hub o S3 de AWS la imagen docker de nuestra aplicación. La construcción del archivo Cloudformation.yml tambien elaborará el servicio de Elastic-Beanstalk de AWS. Si todo vá bien la salida de la plantilla Cloudformation.yml nos dará la url con la aplicación funcionando. En esta rama se crea un Jenkinsfile que realizará el despliegue
+    continuo en Elastic-Beanstalk de AWS.
 	   
 ## PRUEBAS EN LOCAL DE LA APP
 
-    Nos situamos en la rama Dev(Desarrollo). 
-    Si todo vá bien clonamos con la rama main(producción).
+  Nos situamos en la rama Dev(Desarrollo). 
+  Si todo vá bien clonamos con la rama main(producción).
 
-	1- Arrancamos una imagen docker posgresql: docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -d postgres
-	(de esta forma nos aislamos del sistema operativo local)
+	1- Arrancamos una imagen docker posgresql: 
+    docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e 		POSTGRES_PASSWORD=postgres -d postgres
+	  (de esta forma nos aislamos del sistema operativo local)
 	
 	 Ó
 	
-    3- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
-      Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
-      Crear base de datos "ejer_final"
+  2- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
+    Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
+    Crear base de datos "ejer_final"
 
-    app/config.py -> configurar para conectar a postgreSQL. 
-       SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:juan@127.0.0.1:5432/ejer_final'
+   	app/config.py -> configurar para conectar a postgreSQL. 
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:juan@127.0.0.1:5432/ejer_final'
 	(de esta forma no nos aislamos del sistema operativo local, ya que la instalación de postresql se
 	 realizado en un sistema operativo Windows).
 
-    * Ejecutar "python run.py"
+  * Ejecutar "python run.py"
 
     Pruebas del funcionamiento de la aplicación sobre la base de datos PostgreSQL.
 
@@ -317,11 +257,8 @@ TOTAL                60     10    83%
 
 # 2- CREACIÓN DE PIPELINE DE CI. JENKINS
 
-Desde Jenkins (instalado en wsl(Windows)) se configura pipeline para ejecutar las pruebas unitarias, pruebas de covertura y linting; de forma automática. Se configura en Jenkins para que recoja el Jenkinsfile de Github en la rama "QA" y
-ejecute la canalización o pipeline. Al ejecutarse se crean dos ramas: la primera vá creando una imagen de la aplicación que
-recoge de "Dokerfile", y en la otra rama levanta un imagen docker con python ("python:3.9-slim"), ejecuta un entorno
-virtual y lo levanta, despues instala las librerias que necesita nuestra aplicación y acontinuación pasa los test de
-covertura. Si pasa el 80% de los test de covertura continua y pertenece a la rama "QA" o "main" crea un push a Docker Hub.
+Desde Jenkins (instalado en wsl(Windows)) se configura pipeline para ejecutar las pruebas unitarias, pruebas de covertura y linting; de forma automática. Se configura en Jenkins para que recoja el Jenkinsfile de Github en la rama "QA" y ejecute la canalización o pipeline. Al ejecutarse se crean dos ramas: la primera vá creando una imagen de la aplicación que recoge de "Dokerfile", y en la otra rama levanta un imagen docker con python ("python:3.9-slim"), ejecuta un entorno virtual y lo levanta, despues instala las librerias que necesita nuestra aplicación y a continuación pasa los test de
+covertura. Si pasa el 80% de los test de covertura continua y pertenece a la rama "QA" o "main" crea un push a Docker Hub y S3 de AWS.
 
 
 ## CREACIÓN DE PIPELINE DE CI. GITHUB ACTIONS
@@ -333,7 +270,7 @@ las librerias de pytest y coverage, y ejecuta las pruebas.
 En main y Dev se realizan pruebas de conexión a la base de datos despues de realizar
 curl a funciones de crear, borrar o devolver todo.
 En QA se realizan los test unitarios y test de covertura. Si pasa los test de covertura
-con más de un 80 porciento crea un pull-request a la rama principal o "main"(producción).
+con más de un 80% crea un pull-request a la rama principal o "main"(producción).
 
 Se puede ver en https://github.com/JuanGarciaMontero/DevOps-Final/
 
@@ -344,9 +281,9 @@ Se puede ver en https://github.com/JuanGarciaMontero/DevOps-Final/
 
 Nos situamos en la rama "QA". Creamos un clon a la rama nueva llamada "Ops".
 
-Creación de cloudformation donde se pide crear una instancia EC2 "t2.small" y que coja una
-ami de linux de amazon. Instanciamos EC2 más la imagen de la ami linux y un segurity group, y ejecutamos
-dentro libreria "http" para para poder tener un servidor web que arrancamos permitiendo que
+1./ Prueba Cloudformation.yml
+
+Creación de cloudformation(Cloudformation.yml) donde se pide crear una instancia EC2 "t2.small" y que coja una ami de linux de amazon. Instanciamos EC2 más la imagen de la ami linux y un segurity group, y ejecutamos dentro libreria "http" para para poder tener un servidor web que arrancamos permitiendo que
 escuche por el puerto 8080, creamos un index.html donde dentro escribimos el texto
 "Hello from EC2". En el segurity group habilitamos el puerto 8080 para que conecte a través
 de ssh a través de un rango de ips.
@@ -367,6 +304,27 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' "http://q
 
 curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.com:5000/data" ERROR 503 Servidor
 
+2./ Prueba Cloudrfomatin_new.yml
+
+Creamos Cloudformation_new.yml que creará una aplicación en Elastic Beanstalk con nuestra app y una
+base de datos postgresql, y nos dará como resultado la url de la aplicación en preproducción.
+
+3./ Prueba despliegue continuo "CD". Jenkinsfile. Rama Ops o preproducción.
+
+Continuamos con las pruebas en la rama Ops. Creamos un Jenkinsfile para realizar las pruebas de despliegue continuo (CD), este recoje la imagen S3 del la aplicación y crea una aplicación en elasticbeanstalk, se finaliza con la creación del entorno en elasticbeanstalk. Si todo va bien nos devolvera la url de la aplicación en preproducción.
+
+4./ Prueba despliegue continuo "CD". Jenkinsfile. Rama main o producción.
+
+En la rama "main" o producción, preparamos la app para producción sin los test y el servidor Flask que arranque con Gurnicorn.
+
+Creamos un Dockerfile para empaquetar la aplicación en un docker y si pasa las pruebas de covertura, que se guarde en Docker Hub y S3 de AWS.
+
+A continuación creamos un Jenkinsfile que realice los mismo pasos que en "QA" pero ahora tambien debe
+realizar el CD. Si son las ramas Ops o main se conecta a AWS y crea una aplicación en Elastibeanstalk
+con un entorno virutal; dandonos la url de la aplicación en producción.
+
+
+
 *********************************************************************************************************************************
 
 # 4- DESPLIEGUE
@@ -375,19 +333,42 @@ curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.
 
 * Ejecutar Ansible en Linux en desarrollo, dev. (aprovisionamiento para app e imagen de postgresql)
 
-	Crea archivo secrets.yml -> ansible-vault encrypt secrets.yml
-
 	ansible-playbook -i inventory.yml playbook.yml
-	
-    Si el contenedor ya está creado con el mismo nombre dará error así que:
-    docker ps -a
-    docker stop 1353d9fab800
-    docker rm 1353d9fab800
 
-* Ejecutar Ansible en Linux en producción, prod.(aprovisionamiento para app y base de dato postpresql)
+Este script Ansible realiza varias tareas para la instalación y configuración de un entorno de aplicación Flask con Nginx como servidor web y PostgreSQL como base de datos. Está dividido en tres secciones, cada una dirigida a un grupo específico de servidores:
 
-	Crea archivo secrets.yml -> ansible-vault encrypt secrets.yml
+1./ Instalación y Configuración del Servidor Nginx con Flask:
+  - Instala Nginx.
+  - Crea un usuario llamado nginx.
+  - Instala Python 3 y pip.
+  - Instala virtualenv globalmente.
+  - Crea un entorno virtual en /code/mlvenv e instala los paquetes requeridos para Flask y PostgreSQL en   este entorno.
+  - Activa el entorno virtual.
+2./ Instalación y Configuración de la Base de Datos PostgreSQL:
+  - Instala PostgreSQL.
+  - Configura la autenticación md5 en PostgreSQL modificando pg_hba.conf.
+  - Reinicia PostgreSQL para aplicar los cambios.
+  - Instala psycopg2 para la conexión entre Python y PostgreSQL.
+  - Incluye variables desde un archivo Vault (secrets.yml) para configurar la base de datos.
+  - Crea la base de datos y el usuario en PostgreSQL utilizando las variables del archivo Vault.
+3./ Tareas Comunes:
+  -En el servidor localhost (donde se ejecuta Ansible), crea un archivo de marcador de posición para indicar que la instalación está completa.
+  -Actualiza la marca de tiempo del archivo de marcador de posición para reflejar la última provisión.
 
-	ansible-playbook -i inventory.yml playbook_prod.yml ->
+Además, se define un handler para recargar PostgreSQL en caso de cambios en su configuración.
 
-TASK [Crear base de datos y usuario en PostgreSQL] **************************************************************************fatal: [localhost]: FAILED! => {"changed": false, "msg": "unable to connect to database: connection to server on socket "/var/run/********ql/.s.PGSQL.5432" failed: fe_sendauth: no password supplied\n"} ...ignoring
+Este script está estructurado para automatizar la instalación y configuración de los componentes necesarios para ejecutar una aplicación Flask con Nginx como servidor web y PostgreSQL como base de datos en un entorno Linux.
+
+****************************************************************************************************
+
+Conlusiones de la elección de Elastic-Beanstealk:
+
+1: Ofrece una forma rápida y sencilla de implementar y administrar aplicaciones web. Abstrae gran parte de la infraestructura subyacente, lo que facilita la implementación y el escalado de aplicaciones sin preocuparse por la infraestructura subyacente.
+
+2: Proporciona escalado automático para aplicaciones web basadas en la carga de tráfico. Puedes escalar automáticamente la capacidad de computación, el equilibrio de carga y otros recursos en función de la demanda de la aplicación.
+
+3: Es ideal para aplicaciones web tradicionales que se ejecutan en entornos preconfigurados (como PHP, Python, Java, etc.). Proporciona opciones limitadas de configuración para el entorno de ejecución.
+
+4: Suele ser más fácil de administrar y puede ser más económico para aplicaciones simples o en etapas iniciales, ya que AWS se encarga de gran parte de la infraestructura subyacente.
+
+5: Es más adecuado si tu equipo tiene poca experiencia con Kubernetes o desea una solución rápida y sencilla para implementar aplicaciones web.
