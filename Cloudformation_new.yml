@@ -30,8 +30,8 @@ Resources:
     Properties:
       ApplicationName: !Ref MyApplication
       SourceBundle:
-        S3Bucket: elasticbeanstalk-eu-west-1-071538442084
-        S3Key: juangarciamontero/app25
+        S3Bucket: !Sub "elasticbeanstalk-eu-west-1-${S3_BUCKET_NAME}"
+        S3Key: !Sub "${DOCKER_IMAGE_NAME}-${VERSION}.tar.gz"
 
   MyEnvironment:
     Type: AWS::ElasticBeanstalk::Environment
