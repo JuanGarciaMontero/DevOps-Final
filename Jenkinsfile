@@ -64,9 +64,9 @@ pipeline {
 
                     // Subir la imagen a AWS S3
                     sh "aws s3 cp \${DOCKER_IMAGE_NAME}:\${VERSION} s3://\${S3_BUCKET_NAME}/\${DOCKER_IMAGE_NAME}-\${VERSION}.tar.gz"
+                }
+            }
         }
-    }
-}
 
     }
 }
