@@ -52,8 +52,6 @@
         Se sigue una metodología ágil con sprints de dos semanas. El código se gestiona a través 
         de un repositorio Git, y las tareas se gestionan con Jira.
 
-
-
          Pruebas:
 
            Las pruebas unitarias y de covertura se ejecutan automáticamente en cada confirmación 
@@ -71,8 +69,6 @@
 
            Se utiliza AWS CloudWatch para la monitorización de métricas y logs. 
            Las alertas se configuran para notificar eventos críticos.
-
-
 
          Seguridad:
 
