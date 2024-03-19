@@ -4,7 +4,7 @@ Description: Plantilla para desplegar una aplicación Flask en Elastic Beanstalk
 Parameters:
   EnvironmentName:
     Type: String
-    Default: MyFlaskEnvironment
+    Default: App-Flask-Postgresql
     Description: Nombre del entorno de Elastic Beanstalk
   DBName:
     Type: String
@@ -51,7 +51,7 @@ Resources:
     Type: AWS::ElasticBeanstalk::ConfigurationTemplate
     Properties:
       ApplicationName: !Ref MyApplication
-      Description: Configuration for MyFlaskEnvironment
+      Description: Configuration for App-Flask-Postgresql
       SolutionStackName: "64bit Amazon Linux 2 v3.6.4 running Corretto 11"
 
   MyDBInstance:
