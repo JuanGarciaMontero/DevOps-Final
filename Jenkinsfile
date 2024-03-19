@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     withAWS(credentials: 'aws-credentials', region: AWS_DEFAULT_REGION) {
-                        sh "aws elasticbeanstalk create-application-version --application-name \${EB_ENVIRONMENT_NAME} --version-label \${VERSION} --source-bundle S3Bucket=elasticbeanstalk-eu-west-1-1234567890,S3Key=\${DOCKER_IMAGE_NAME}:\${VERSION}"
+                        sh "aws elasticbeanstalk create-application-version --application-name \${EB_ENVIRONMENT_NAME} --version-label \${VERSION} --source-bundle S3Bucket=elasticbeanstalk-eu-west-1-\${S3_BUCKET_NAME}/\${DOCKER_IMAGE_NAME}-\${VERSION}.tar.gz,S3Key=\${DOCKER_IMAGE_NAME}:\${VERSION}"
                         sh "aws elasticbeanstalk update-environment --application-name \${EB_ENVIRONMENT_NAME} --environment-name \${EB_ENVIRONMENT_NAME} --version-label \${VERSION}"
                     }
                 }
