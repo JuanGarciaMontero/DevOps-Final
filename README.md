@@ -143,17 +143,18 @@
 # 1- CREACIÓN DE UN ENTORNO LOCAL DE DESARROLLO:
 
     IDE elegido es Visual Studio Code por ser muy versatil al poder utilizar multiples 
-    lenguajes y tener plugins adaptados a ellos.
+    lenguajes y tener plugins adaptados a ellos, se puede utilizar cualquier otro IDE del mercado.
     Necesidad de tener instalado Python en version igual o superior a la 3, de forma global 
-    en la máquina local. Ya que es el lenguaje utilizado en la aplicación sobre la que tenemos 
-    que desarrollar la solución. Una vez elegido la ruta y nombre de la carpeta que llevará 
-    nuestro proyecto " DevOps-Final", lo primero es clonar el repositorio público creado en 
+    en la máquina local, ya que es el lenguaje utilizado en la aplicación sobre la que tenemos 
+    que desarrollar la solución. 
+	Una vez elegido la ruta y nombre de la carpeta que llevará nuestro proyecto " DevOps-Final",
+	lo primero es clonar el repositorio público creado en 
     github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto. 
     A continuación copiamos los archivos y carpetas de la aplicación en nuestro proyecto.
     A continuación tenemos que aislar nuestro proyecto del resto del equipo, para poder utilizar
-     la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos 
-     un entorno virtual y cargamos las dependencias en su versión necesarias para nuestro proyecto. 
-     La aplicación en local podemos arrancarla con "python run.py".
+    la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos 
+    un entorno virtual y cargamos las dependencias en su versión necesarias para nuestro proyecto. 
+     a aplicación en local podemos arrancarla con "python run.py".
 
     Para crear un entorno local de desarrollo, sigue estos pasos:
 
@@ -191,18 +192,52 @@
       * git add *
       * git commit -m "Agrego archivos QA"
       * git push --set-upstream origin QA
-
+	  
+ Explicación de las Ramas:
+ 
+	** La rama "main" es la rama de producción que llevará el código de la aplicación preparado para producción
+	   y los archivos que prepara la infrastructura como código y su despliegue en AWS(Cloudformation.yml)(Nube pública elegida).
+	   
+	** La rama "Dev" tendrá el código de la aplicación en Flask además el archivo Docker (Dockerfile),
+	   que permitiran a los desarrolladores poder evolucionar la aplicación contra la imagen docker de una
+	   base de datos postgresql. En esta fase no se permite que falle la aplicación contra la base de datos. Se consigue
+	   pasando CI action de Github a esta rama.
+	   
+	** La rama "QA" tendrá el código de la aplicación además de las modificaciones en el código para pasar test
+	   unitarios y de covertura. Los test se pueden pasar localmente (Dockerfile1 y Docker-compose.yml), pero se pretende
+	   que el código pase a una canalizacion o pipeline de integración continua. Esto lo conseguimos a través de CI action de Github (no permitiendo errores al subir código en esta rama, ya que debe pasar 80% de test de covertura), o
+	   con Jenkins. Tenemos elavorado un archivo Jenkinsfile.yml que recoge Jenkins cuando hay cambios en el repositorio
+	   Github(configuración de webhook en Github y activar la recogidas de esos hooks y a que rama afecta "QA"), arranca
+	   la canalización: primero vá elaborando un contenedor docker de la aplicación actual, y por la otra rama
+	   levanta una imagen docker con los archivos de la aplicación y pasa los test de covertura; estos deben tener
+	   una covertura mayor al 80% sino dará error el pipeline. Si todo va bien y pasa el 80% de los test de covertura,
+	   y estamos en la rama "main" o "QA"; continua con el push de la imagen docker generada a un repositorio, como 
+	   Docker Hub o S3 de AWS.
+	   
+	** La rama "Ops" tendrá el código de la infractructura como código, será un entorno preproduccion. Se pretende elaborar
+	   una plantilla en Cloudformation.yml para que elabore un entorno con la imagen de una base de datos postgresql y
+	   recoja del repositorio Docker Hub o S3 de AWS la imagen docker de nuestra aplicación. La construcción del archivo
+	   Cloudformation.yml tambien elaborará el servicio de Elastic-Beanstalk de AWS. Si todo vá bien la salida de la
+	   plantilla Cloudformation.yml nos dará la url con la aplicación funcionando.
+	   
 ## PRUEBAS EN LOCAL DE LA APP
 
     Nos situamos en la rama Dev(Desarrollo). 
     Si todo vá bien clonamos con la rama main(producción).
 
-    Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
-      Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
-      Crear base de datos "ejer_final"
+	1- Arrancamos una imagen docker posgresql: docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e 		POSTGRES_PASSWORD=postgres -d postgres
+	(de esta forma nos aislamos del sistema operativo local)
+	
+	 Ó
+	
+    	2- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
+     	 Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
+      	Crear base de datos "ejer_final"
 
-    app/config.py -> configurar para conectar a postgreSQL. 
-       SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:juan@127.0.0.1:5432/ejer_final'
+   	 app/config.py -> configurar para conectar a postgreSQL. 
+      	 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:juan@127.0.0.1:5432/ejer_final'
+	(de esta forma no nos aislamos del sistema operativo local, ya que la instalación de postresql se
+	 realizado en un sistema operativo Windows).
 
     * Ejecutar "python run.py"
 
@@ -224,7 +259,9 @@
 
 # TEST UNITARIOS:
 
-Nos situamos dentro de la rama QA(pruebas). Clonamos la rama main en QA.
+Nos situamos dentro de la rama QA(pruebas). Clonamos la rama Dev en QA.
+Creamos los archivos Dockerfile1 y Docker-compose.yml. Con "Docker-compose up" levantamos la app con 
+una base de datos postgresql.
 En la rama QA incluimos la carpetas tests y dentro creamos el archivo "test_routes.py",
 necerarias para realizar pruebas unitarias con "pytest". A continuación instalamos pytest.
 
@@ -280,44 +317,12 @@ TOTAL                60     10    83%
 
 # 2- CREACIÓN DE PIPELINE DE CI. JENKINS
 
- Desde Jenkins (instalado en wsl(Windows)) se configura pipeline para ejecutar las pruebas unitarias, pruebas de covertura y linting; de forma automática. Lo primero es realizar un dockerfile donde estará la app, tests y dependencias (requirements.txt), y lo se publica en Docker Hub. Desde Jenkins y apuntando al repositorio en Github donde se encuantra el Jenkisfile se ejecuta la CI de Jenkins y nos encontramos con error en los test debido a no tener la base de datos Postgresql.
+Desde Jenkins (instalado en wsl(Windows)) se configura pipeline para ejecutar las pruebas unitarias, pruebas de covertura y linting; de forma automática. Se configura en Jenkins para que recoja el Jenkinsfile de Github en la rama "QA" y
+ejecute la canalización o pipeline. Al ejecutarse se crean dos ramas: la primera vá creando una imagen de la aplicación que
+recoge de "Dokerfile", y en la otra rama levanta un imagen docker con python ("python:3.9-slim"), ejecuta un entorno
+virtual y lo levanta, despues instala las librerias que necesita nuestra aplicación y acontinuación pasa los test de
+covertura. Si pasa el 80% de los test de covertura continua y pertenece a la rama "QA" o "main" crea un push a Docker Hub.
 
-Para test(dockerfile). Empaquetamos nuestra app con los requerimientos en un docker.
-
-docker build -t juangarciamontero/app15:1.0.1 .
-docker images
-docker tag juangarciamontero/app15:1.0.1 juangarciamontero/app15:1.0.1
-docker push juangarciamontero/app15:1.0.1
-
-Al ejecutar Jenkinsfile desde Jenkins apuntando a un repo e Github, produce error al pasar
-los test unitario y no continua, ya que no encuentra la base de datos Postgresql. Implemento la
-solución con base de datos pero en Jenkins no me deja introducir comandos en el docker y lo cierra.
-
-
-Ejecutando Python --version:
-Print Message
-0,75 Seg
-0
-Ejecutando Python --version:
-python --version
-Shell Script
-6 Seg
-0
-+ python --version
-1
-Python 3.8.18
-pytest
-Shell Script
-1 Min 25 Seg
-4
-collected 53 items / 14 errors
-5
-6
-==================================== ERRORS ====================================
-7
-_ ERROR collecting QA/env/Lib/site-packages/greenlet/tests/test_contextvars.py _
-8
-ImportError while importing test module '/var/lib/jenkins/workspace/CI_DevOps-Final/QA/env/Lib/site-packages/greenlet/tests/test_contextvars.py'.
 
 ## CREACIÓN DE PIPELINE DE CI. GITHUB ACTIONS
 
@@ -337,7 +342,7 @@ Se puede ver en https://github.com/JuanGarciaMontero/DevOps-Final/
 
 # 3- INFRAESTRUCTURA COMO CÓDIGO
 
-Nos situamos en la rama Dev(Desarrollo). Si todo vá bien clonamos con la rama main(producción).
+Nos situamos en la rama "QA". Creamos un clon a la rama nueva llamada "Ops".
 
 Creación de cloudformation donde se pide crear una instancia EC2 "t2.small" y que coja una
 ami de linux de amazon. Instanciamos EC2 más la imagen de la ami linux y un segurity group, y ejecutamos
@@ -372,8 +377,8 @@ curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.
 
 	Crea archivo secrets.yml -> ansible-vault encrypt secrets.yml
 
-	ansible-playbook -i inventory.yml playbook_dev.yml --ask-vault-pass -> contraseña=juan
-  
+	ansible-playbook -i inventory.yml playbook.yml
+	
     Si el contenedor ya está creado con el mismo nombre dará error así que:
     docker ps -a
     docker stop 1353d9fab800
