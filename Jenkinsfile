@@ -3,7 +3,6 @@ pipeline {
     agent any
 
     stages {
-        stages {
             stage('Despliegue en AWS Elastic Beanstalk') {
                 when {
                     anyOf {
@@ -15,7 +14,8 @@ pipeline {
                     AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
                     AWS_DEFAULT_REGION = 'eu-west-1' // Cambia esto a tu región AWS
                     EB_ENVIRONMENT_NAME = 'App-Flask-Postgresql' // Cambia esto al nombre de tu entorno EB
-                    VERSION = "1.0.1"
+                V   ERSION = "1.0.1"
+                    appURL = ''
                 }
                 steps {
                     script {
@@ -31,8 +31,8 @@ pipeline {
                             echo "La URL de la aplicación es: \${appURL}"
                         }
                     }
-                }
             }
+            
         }
     }
 }
