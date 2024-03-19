@@ -98,11 +98,11 @@
   lenguajes y tener plugins adaptados a ellos, se puede utilizar cualquier otro IDE del mercado.
   Necesidad de tener instalado Python en version igual o superior a la 3, de forma global 
   en la máquina local, ya que es el lenguaje utilizado en la aplicación sobre la que tenemos 
-  que desarrollar la solución. 
-
-	Una vez elegido la ruta y nombre de la carpeta que llevará nuestro proyecto " DevOps-Final",
-	lo primero es clonar el repositorio público creado en 
-  github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto. 
+  que desarrollar la solución.
+  
+  Una vez elegido la ruta y nombre de la carpeta que llevará nuestro proyecto " DevOps-Final",
+	lo primero es clonar el repositorio público creado en github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto.
+   
   A continuación copiamos los archivos y carpetas de la aplicación en nuestro proyecto.
   Despues tenemos que aislar nuestro proyecto del resto del equipo, para poder utilizar
   la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos 
