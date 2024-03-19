@@ -102,7 +102,7 @@
   
   Una vez elegido la ruta y nombre de la carpeta que llevará nuestro proyecto " DevOps-Final",
 	lo primero es clonar el repositorio público creado en github https://github.com/JuanGarciaMontero/DevOps-Final/ a nuestra carpeta proyecto.
-   
+
   A continuación copiamos los archivos y carpetas de la aplicación en nuestro proyecto.
   Despues tenemos que aislar nuestro proyecto del resto del equipo, para poder utilizar
   la versión deseada de dependencias o librerias en nuestra aplicación. Para ellos creamos 
@@ -112,13 +112,13 @@
   Para crear un entorno local de desarrollo, sigue estos pasos:
 
   1. Configuración del Entorno:
-    - python -m venv env
-    - source env/Scripts/activate
+      - python -m venv env
+      - source env/Scripts/activate
   2. Instalación de Dependencias:
-    - Instala las dependencias del proyecto: pip install -r requirements.txt.
+      - Instala las dependencias del proyecto: pip install -r requirements.txt.
   3. Ejecución Local:
-    - Ejecuta la aplicación localmente: python run.py.
-    - Accede a la aplicación en tu navegador: http://localhost:5000/data
+      - Ejecuta la aplicación localmente: python run.py.
+      - Accede a la aplicación en tu navegador: http://localhost:5000/data
     
 # Crear Repositorio en GitHub con usuario JuanGarciaMontero con nombre "DevOps-Final"
 
@@ -164,13 +164,13 @@
   Nos situamos en la rama Dev(Desarrollo). 
   Si todo vá bien clonamos con la rama main(producción).
 
-	1- Arrancamos una imagen docker posgresql: 
+	*1- Arrancamos una imagen docker posgresql: 
     docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e 		POSTGRES_PASSWORD=postgres -d postgres
 	  (de esta forma nos aislamos del sistema operativo local)
 	
 	 Ó
 	
-  2- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
+  *2- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
     Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
     Crear base de datos "ejer_final"
 
@@ -281,7 +281,7 @@ Se puede ver en https://github.com/JuanGarciaMontero/DevOps-Final/
 
 Nos situamos en la rama "QA". Creamos un clon a la rama nueva llamada "Ops".
 
-1./ Prueba Cloudformation.yml
+*1./ Prueba Cloudformation.yml
 
 Creación de cloudformation(Cloudformation.yml) donde se pide crear una instancia EC2 "t2.small" y que coja una ami de linux de amazon. Instanciamos EC2 más la imagen de la ami linux y un segurity group, y ejecutamos dentro libreria "http" para para poder tener un servidor web que arrancamos permitiendo que
 escuche por el puerto 8080, creamos un index.html donde dentro escribimos el texto
@@ -304,16 +304,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' "http://q
 
 curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.com:5000/data" ERROR 503 Servidor
 
-2./ Prueba Cloudrfomatin_new.yml
+*2./ Prueba Cloudrfomatin_new.yml
 
 Creamos Cloudformation_new.yml que creará una aplicación en Elastic Beanstalk con nuestra app y una
 base de datos postgresql, y nos dará como resultado la url de la aplicación en preproducción.
 
-3./ Prueba despliegue continuo "CD". Jenkinsfile. Rama Ops o preproducción.
+*3./ Prueba despliegue continuo "CD". Jenkinsfile. Rama Ops o preproducción.
 
 Continuamos con las pruebas en la rama Ops. Creamos un Jenkinsfile para realizar las pruebas de despliegue continuo (CD), este recoje la imagen S3 del la aplicación y crea una aplicación en elasticbeanstalk, se finaliza con la creación del entorno en elasticbeanstalk. Si todo va bien nos devolvera la url de la aplicación en preproducción.
 
-4./ Prueba despliegue continuo "CD". Jenkinsfile. Rama main o producción.
+*4./ Prueba despliegue continuo "CD". Jenkinsfile. Rama main o producción.
 
 En la rama "main" o producción, preparamos la app para producción sin los test y el servidor Flask que arranque con Gurnicorn.
 
@@ -344,6 +344,7 @@ Este script Ansible realiza varias tareas para la instalación y configuración 
   - Instala virtualenv globalmente.
   - Crea un entorno virtual en /code/mlvenv e instala los paquetes requeridos para Flask y PostgreSQL en   este entorno.
   - Activa el entorno virtual.
+
 2./ Instalación y Configuración de la Base de Datos PostgreSQL:
   - Instala PostgreSQL.
   - Configura la autenticación md5 en PostgreSQL modificando pg_hba.conf.
@@ -351,6 +352,7 @@ Este script Ansible realiza varias tareas para la instalación y configuración 
   - Instala psycopg2 para la conexión entre Python y PostgreSQL.
   - Incluye variables desde un archivo Vault (secrets.yml) para configurar la base de datos.
   - Crea la base de datos y el usuario en PostgreSQL utilizando las variables del archivo Vault.
+  
 3./ Tareas Comunes:
   -En el servidor localhost (donde se ejecuta Ansible), crea un archivo de marcador de posición para indicar que la instalación está completa.
   -Actualiza la marca de tiempo del archivo de marcador de posición para reflejar la última provisión.
@@ -361,7 +363,7 @@ Este script está estructurado para automatizar la instalación y configuración
 
 ****************************************************************************************************
 
-Conlusiones de la elección de Elastic-Beanstealk:
+*Conlusiones de la elección de Elastic-Beanstealk:
 
 1: Ofrece una forma rápida y sencilla de implementar y administrar aplicaciones web. Abstrae gran parte de la infraestructura subyacente, lo que facilita la implementación y el escalado de aplicaciones sin preocuparse por la infraestructura subyacente.
 
