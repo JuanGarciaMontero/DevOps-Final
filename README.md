@@ -52,7 +52,7 @@
         Se sigue una metodología ágil con sprints de dos semanas. El código se gestiona a través 
         de un repositorio Git, y las tareas se gestionan con Jira.
 
-  ![imagen Jira Github](https://www.bitband.com/blog/wp-content/uploads/2022/04/Jira-Git-CTA.png)
+
 
          Pruebas:
 
@@ -66,21 +66,18 @@
           El despliegue se realiza automáticamente desde el repositorio Git a través de 
           AWS Elastic Beanstalk. Las actualizaciones se implementan con mínimo tiempo de inactividad.
 
-  ![imagen AWS Elastic Beanstalk](https://media.geeksforgeeks.org/wp-content/uploads/20230418121110/aws-beanstalk.webp)
 
          Monitorización y Registro:
 
            Se utiliza AWS CloudWatch para la monitorización de métricas y logs. 
            Las alertas se configuran para notificar eventos críticos.
 
-  ![imagen AWS CloudWatch](https://docs.aws.amazon.com/images/AmazonCloudWatch/latest/monitoring/images/CW-default-dashboard-update.png)
+
 
          Seguridad:
 
            Se aplican prácticas de seguridad, como el cifrado de datos en reposo y en tránsito, 
           y se gestionan los accesos a los recursos mediante roles IAM.
-      
-  ![imagen AWS IAM](https://i.ytimg.com/vi/pmemtFjlApQ/maxresdefault.jpg)
 
          Ciclo de Vida Completo:
 
@@ -281,7 +278,7 @@ Se puede ver en https://github.com/JuanGarciaMontero/DevOps-Final/
 
 Nos situamos en la rama "QA". Creamos un clon a la rama nueva llamada "Ops".
 
-*1./ Prueba Cloudformation.yml
+## 1./ Prueba Cloudformation.yml-
 
 Creación de cloudformation(Cloudformation.yml) donde se pide crear una instancia EC2 "t2.small" y que coja una ami de linux de amazon. Instanciamos EC2 más la imagen de la ami linux y un segurity group, y ejecutamos dentro libreria "http" para para poder tener un servidor web que arrancamos permitiendo que
 escuche por el puerto 8080, creamos un index.html donde dentro escribimos el texto
@@ -304,16 +301,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' "http://q
 
 curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.com:5000/data" ERROR 503 Servidor
 
-*2./ Prueba Cloudrfomatin_new.yml
+## 2./ Prueba Cloudrfomatin_new.yml
 
 Creamos Cloudformation_new.yml que creará una aplicación en Elastic Beanstalk con nuestra app y una
 base de datos postgresql, y nos dará como resultado la url de la aplicación en preproducción.
 
-*3./ Prueba despliegue continuo "CD". Jenkinsfile. Rama Ops o preproducción.
+## 3./ Prueba despliegue continuo "CD". Jenkinsfile. Rama Ops o preproducción.
 
 Continuamos con las pruebas en la rama Ops. Creamos un Jenkinsfile para realizar las pruebas de despliegue continuo (CD), este recoje la imagen S3 del la aplicación y crea una aplicación en elasticbeanstalk, se finaliza con la creación del entorno en elasticbeanstalk. Si todo va bien nos devolvera la url de la aplicación en preproducción.
 
-*4./ Prueba despliegue continuo "CD". Jenkinsfile. Rama main o producción.
+## 4./ Prueba despliegue continuo "CD". Jenkinsfile. Rama main o producción.
 
 En la rama "main" o producción, preparamos la app para producción sin los test y el servidor Flask que arranque con Gurnicorn.
 
