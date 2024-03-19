@@ -157,13 +157,13 @@
   Nos situamos en la rama Dev(Desarrollo). 
   Si todo vá bien clonamos con la rama main(producción).
 
-	*1- Arrancamos una imagen docker posgresql: 
-    docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e 		POSTGRES_PASSWORD=postgres -d postgres
+## 1- Arrancamos una imagen docker posgresql: 
+  docker run --name ejer_final_postgres -e POSTGRES_DB=ejer_final -e POSTGRES_USER=postgres -e 		POSTGRES_PASSWORD=postgres -d postgres
 	  (de esta forma nos aislamos del sistema operativo local)
 	
 	 Ó
 	
-  *2- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
+  ## 2- Instalar PostgreSQL para Windows. Levatar servicio y abrir "pgAdmin4".
     Crear acceso a postgres con el usuario "juan" en local por el puerto "5432"
     Crear base de datos "ejer_final"
 
@@ -274,7 +274,7 @@ Se puede ver en https://github.com/JuanGarciaMontero/DevOps-Final/
 
 Nos situamos en la rama "QA". Creamos un clon a la rama nueva llamada "Ops".
 
-## 1./ Prueba Cloudformation.yml-
+## 1./ Prueba Cloudformation.yml
 
 Creación de cloudformation(Cloudformation.yml) donde se pide crear una instancia EC2 "t2.small" y que coja una ami de linux de amazon. Instanciamos EC2 más la imagen de la ami linux y un segurity group, y ejecutamos dentro libreria "http" para para poder tener un servidor web que arrancamos permitiendo que
 escuche por el puerto 8080, creamos un index.html donde dentro escribimos el texto
@@ -297,7 +297,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "Juan"}' "http://q
 
 curl "http://qualentum-LoadBala-QYRTZQATUF4F-1646991560.eu-west-1.elb.amazonaws.com:5000/data" ERROR 503 Servidor
 
-## 2./ Prueba Cloudrfomatin_new.yml
+## 2./ Prueba Cloudfomation_new.yml
 
 Creamos Cloudformation_new.yml que creará una aplicación en Elastic Beanstalk con nuestra app y una
 base de datos postgresql, y nos dará como resultado la url de la aplicación en preproducción.
@@ -356,14 +356,14 @@ Este script está estructurado para automatizar la instalación y configuración
 
 ****************************************************************************************************
 
-*Conlusiones de la elección de Elastic-Beanstealk:
+# Conlusiones de la elección de Elastic-Beanstealk:
 
-1: Ofrece una forma rápida y sencilla de implementar y administrar aplicaciones web. Abstrae gran parte de la infraestructura subyacente, lo que facilita la implementación y el escalado de aplicaciones sin preocuparse por la infraestructura subyacente.
+## 1: Ofrece una forma rápida y sencilla de implementar y administrar aplicaciones web. Abstrae gran parte de la infraestructura subyacente, lo que facilita la implementación y el escalado de aplicaciones sin preocuparse por la infraestructura subyacente.
 
-2: Proporciona escalado automático para aplicaciones web basadas en la carga de tráfico. Puedes escalar automáticamente la capacidad de computación, el equilibrio de carga y otros recursos en función de la demanda de la aplicación.
+## 2: Proporciona escalado automático para aplicaciones web basadas en la carga de tráfico. Puedes escalar automáticamente la capacidad de computación, el equilibrio de carga y otros recursos en función de la demanda de la aplicación.
 
-3: Es ideal para aplicaciones web tradicionales que se ejecutan en entornos preconfigurados (como PHP, Python, Java, etc.). Proporciona opciones limitadas de configuración para el entorno de ejecución.
+## 3: Es ideal para aplicaciones web tradicionales que se ejecutan en entornos preconfigurados (como PHP, Python, Java, etc.). Proporciona opciones limitadas de configuración para el entorno de ejecución.
 
-4: Suele ser más fácil de administrar y puede ser más económico para aplicaciones simples o en etapas iniciales, ya que AWS se encarga de gran parte de la infraestructura subyacente.
+## 4: Suele ser más fácil de administrar y puede ser más económico para aplicaciones simples o en etapas iniciales, ya que AWS se encarga de gran parte de la infraestructura subyacente.
 
-5: Es más adecuado si tu equipo tiene poca experiencia con Kubernetes o desea una solución rápida y sencilla para implementar aplicaciones web.
+## 5: Es más adecuado si tu equipo tiene poca experiencia con Kubernetes o desea una solución rápida y sencilla para implementar aplicaciones web.
