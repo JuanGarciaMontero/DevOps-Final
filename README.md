@@ -136,19 +136,20 @@
 	  
  Explicación de las Ramas:
  
-	** La rama "main" es la rama de producción que llevará el código de la aplicación preparado para
-    producción y los archivos que prepara la infrastructura como código y su despliegue en AWS(Cloudformation.yml)(Nube pública elegida). El despliegue automatico o CD se realiza mediante
-    el archivo Jenkinsfile de la rama main.
+	1/* La rama "main" es la rama de producción que llevará el código de la aplicación preparado para
+    producción y los archivos que prepara la infrastructura como código y su despliegue en AWS(Cloudformation.yml)(Nube pública elegida). 
+    El despliegue automatico o CD se realiza mediante el archivo Jenkinsfile de la rama main.
 	   
-	** La rama "Dev" tendrá el código de la aplicación en Flask además el archivo Docker (Dockerfile),
+	2/* La rama "Dev" tendrá el código de la aplicación en Flask además el archivo Docker (Dockerfile),
 	  que permitiran a los desarrolladores poder evolucionar la aplicación contra la imagen docker de una
-	  base de datos postgresql. En esta fase no se permite que falle la aplicación contra la base de datos. Se consigue pasando CI action de Github a esta rama.
+	  base de datos postgresql.
+    En esta fase no se permite que falle la aplicación contra la base de datos. Se consigue pasando CI action de Github a esta rama.
 	   
-	** La rama "QA" tendrá el código de la aplicación además de las modificaciones en el código para 
+	3/* La rama "QA" tendrá el código de la aplicación además de las modificaciones en el código para 
     pasar test unitarios y de covertura. Los test se pueden pasar localmente (Dockerfile1 y Docker-compose.yml), pero se pretende que el código pase a una canalizacion o pipeline de integración continua. Esto lo conseguimos a través de CI action de Github (no permitiendo errores al subir código en esta rama, ya que debe pasar 80% de test de covertura), o on Jenkins. Tenemos elavorado un archivo Jenkinsfile.yml que recoge Jenkins cuando hay cambios en el repositorio Github(configuración de webhook en Github y activar la recogidas de esos hooks y a que rama afecta "QA"), arranca la canalización: primero vá elaborando un contenedor docker de la aplicación actual, y por la otra rama levanta una imagen docker con los archivos de la aplicación y pasa los test de covertura; estos deben teneruna covertura mayor al 80% sino dará error el pipeline. Si todo va bien y pasa el 80% de los test de covertura,
 	  y estamos en la rama "main" o "QA"; continua con el push de la imagen docker generada a un repositorio, como Docker Hub o S3 de AWS.
 	   
-	** La rama "Ops" tendrá el código de la infractructura como código, será un entorno preproduccion.
+	4/* La rama "Ops" tendrá el código de la infractructura como código, será un entorno preproduccion.
     Se pretende elaborar una plantilla en Cloudformation.yml para que elabore un entorno con la imagen de una base de datos postgresql y recoja del repositorio Docker Hub o S3 de AWS la imagen docker de nuestra aplicación. La construcción del archivo Cloudformation.yml tambien elaborará el servicio de Elastic-Beanstalk de AWS. Si todo vá bien la salida de la plantilla Cloudformation.yml nos dará la url con la aplicación funcionando. En esta rama se crea un Jenkinsfile que realizará el despliegue
     continuo en Elastic-Beanstalk de AWS.
 	   
