@@ -136,9 +136,9 @@
 	  
  Explicación de las Ramas:
  
-	1/ La rama "main" es la rama de producción que llevará el código de la aplicación preparado para
-    	producción y los archivos que prepara la infrastructura como código y su despliegue en AWS(Cloudformation.yml)(Nube pública elegida). 
-    	El despliegue automatico o CD se realiza mediante el archivo Jenkinsfile de la rama main.
+ 1/ La rama "main" es la rama de producción que llevará el código de la aplicación preparado para producción y los 
+ archivos que prepara la infrastructura como código y su despliegue en AWS(Cloudformation.yml)(Nube pública elegida). 
+ El despliegue automatico o CD se realiza mediante el archivo Jenkinsfile de la rama main.
     
     	2/ La rama "Dev" tendrá el código de la aplicación en Flask además el archivo Docker (Dockerfile), que permitiran a los desarrolladores
     	poder evolucionar la aplicación contra la imagen docker de una base de datos postgresql. En esta fase no se permite que falle la aplicación
