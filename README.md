@@ -363,7 +363,9 @@ Este script está estructurado para automatizar la instalación y configuración
 
 ****************************************************************************************************
 
-# Conlusiones de la elección de Elastic-Beanstealk:
+# Conclusiones de la elección de Elastic-Beanstealk:
+
+ ![imagen ArElastic Beanstalk](https://d2908q01vomqb2.cloudfront.net/7719a1c782a1ba91c031a682a0a2f8658209adbf/2021/08/09/Picture1-3.png)
 
 ## 1: Ofrece una forma rápida y sencilla de implementar y administrar aplicaciones web. Abstrae gran parte de la infraestructura subyacente, lo que facilita la implementación y el escalado de aplicaciones sin preocuparse por la infraestructura subyacente.
 
