@@ -79,7 +79,7 @@ pipeline {
                     AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
                     AWS_DEFAULT_REGION = 'eu-west-1' // Cambia esto a tu región AWS
                     EB_ENVIRONMENT_NAME = 'App-Flask-Postgresql' // Cambia esto al nombre de tu entorno EB
-                V   ERSION = "1.0.1"
+                    VERSION = "1.0.1"
                     appURL = ''
                 }
                 steps {
