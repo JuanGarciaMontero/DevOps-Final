@@ -82,9 +82,12 @@ pipeline {
                     EB_ENVIRONMENT_NAME = 'App-Flask-Postgresql' // Cambia esto al nombre de tu entorno EB
                     VERSION = "1.0.1"
                     appURL = ''
-                    DB_URL = 'jdbc:postgresql://<DB_HOST>:<DB_PORT>/<DB_NAME>'
-                    DB_USER = 'ejer_final'
+                    DB_HOST = 'localhost'
+                    DB_PORT = '5432'
+                    DB_NAME = 'ejer_final'
+                    DB_USER = 'postgres'
                     DB_PASSWORD = 'postgres'
+                    DB_URL = 'jdbc:postgresql://<DB_HOST>:<DB_PORT>/<DB_NAME>'
                 }
                 steps {
                     script {
