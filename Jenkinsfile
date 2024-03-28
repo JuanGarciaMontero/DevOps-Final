@@ -93,7 +93,7 @@ pipeline {
                             sh "aws elasticbeanstalk create-application-version --application-name ${EB_ENVIRONMENT_NAME} --version-label ${VERSION} --source-bundle S3Bucket=elasticbeanstalk-eu-west-1-${S3_BUCKET_NAME}/${DOCKER_IMAGE_NAME}-${VERSION}.tar.gz,S3Key=${DOCKER_IMAGE_NAME}:${VERSION}"
                             sh "aws elasticbeanstalk update-environment --application-name ${EB_ENVIRONMENT_NAME} --environment-name ${EB_ENVIRONMENT_NAME} --version-label ${VERSION}"
 					
-					        // Configuración de la conexión a la base de datos en la aplicación
+			    // Configuración de la conexión a la base de datos en la aplicación
                             sh "aws elasticbeanstalk create-environment --application-name ${EB_ENVIRONMENT_NAME} --environment-name ${EB_ENVIRONMENT_NAME} --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=DB_HOST,Value=${DB_HOST} --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=DB_PORT,Value=${DB_PORT} --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=DB_NAME,Value=${DB_NAME} --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=DB_USER,Value=${DB_USER} --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=DB_PASSWORD,Value=${DB_PASSWORD}"
                 
                             // Obtener la URL de la aplicación
@@ -103,9 +103,8 @@ pipeline {
 
                             echo "La URL de la aplicación es: ${appURL}"
 
-				        }
+			}
                     }
                 }
-
-        }
+	    }
 }
